@@ -2858,8 +2858,8 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
   if (existingName) enterApp(existingName);
   else {
     store.del(SESSION_KEY);
-    // First visit on this device (no teacher accounts yet): start with registration
-    if (Object.keys(accounts()).length === 0) showView("register"); else user.focus();
+    // Always open on the login screen; new teachers tap "Create an account"
+    user.focus();
   }
 })();
 </script>
