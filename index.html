@@ -1959,7 +1959,7 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
 
   function loadPlan(){
     const saved = localGet(planDay);
-    plan = normalise(saved || (dayKey(planDay) === dayKey(planToday) ? examplePlan() : emptyPlan()));
+    plan = normalise(saved || emptyPlan());   // every day starts empty; nothing is pre-filled
     syncFromCloud();
   }
   async function syncFromCloud(){
@@ -2131,7 +2131,7 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
     const k = dayKey(new Date());
     if (plan && dayKey(planDay) === k) return plan;
     try { const sv = JSON.parse(localStorage.getItem("wellnest.plan." + k) || "null"); if (sv) return normalise(sv); } catch(e){}
-    return examplePlan();
+    return emptyPlan();
   }
   const toMin = t => { const [h,m] = t.split(":").map(Number); return h*60 + m; };
   function reminderText(b){ return b.remind === 0 ? "Starting now" : "Starts in " + b.remind + " min"; }
