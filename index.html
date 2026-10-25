@@ -2532,6 +2532,30 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
   function weekKey(d = new Date()){ const x = new Date(d); x.setHours(0,0,0,0); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return "jar-" + dayKey(x); }
   const SLIP_COLS = ["#F6C9BE","#FBF2D9","#E2EEF6","#E1EFE5","#ECE6F4"];
   function jarNotes(){ return (kvGet(weekKey()) || {}).notes || []; }
+  /* Sound: a coin dropping into a glass jar. Built with Web Audio (no audio file):
+     a bright metallic "clink" (inharmonic partials), a ringing glass body, and two smaller bounces. */
+  function coinInJar(){
+    const ac = audio(); if (!ac) return;
+    const out = ac.createGain(); out.gain.value = 0.9; out.connect(ac.destination);
+    const strike = (t, vol) => {
+      [[2350, 0.18], [3720, 0.12], [5180, 0.08], [6950, 0.05]].forEach(([f, d]) => {        // metal coin partials
+        const o = ac.createOscillator(), g = ac.createGain(); o.type = "sine"; o.frequency.value = f * (1 + (Math.random() - 0.5) * 0.01);
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol * 0.22, t + 0.003); g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+        o.connect(g).connect(out); o.start(t); o.stop(t + d + 0.05);
+      });
+      [[1240, 0.9], [1975, 0.6]].forEach(([f, d]) => {                                        // glass jar ringing
+        const o = ac.createOscillator(), g = ac.createGain(); o.type = "triangle"; o.frequency.value = f;
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol * 0.07, t + 0.005); g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+        o.connect(g).connect(out); o.start(t); o.stop(t + d + 0.05);
+      });
+      const n = ac.createBufferSource(), b = ac.createBuffer(1, ac.sampleRate * 0.03, ac.sampleRate), dd = b.getChannelData(0);   // tiny tick of contact
+      for (let i = 0; i < dd.length; i++) dd[i] = (Math.random() * 2 - 1) * (1 - i / dd.length);
+      const hp = ac.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 3000; const ng = ac.createGain(); ng.gain.value = vol * 0.15;
+      n.buffer = b; n.connect(hp).connect(ng).connect(out); n.start(t);
+    };
+    const t0 = ac.currentTime + 0.01;
+    strike(t0, 1); strike(t0 + 0.13, 0.45); strike(t0 + 0.22, 0.2);                            // drop + two bounces
+  }
   /* Drop animation: a copy of the new slip falls from the jar's mouth (outside the clipped slip area)
      to where the slip sits, so it is visible however full the jar is. */
   let dropAnim = null;
@@ -2540,7 +2564,7 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
     jar.querySelectorAll(".slip-fly").forEach(n => n.remove());
     if (dropAnim) { try { dropAnim.cancel(); } catch(e){} }
     const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce || !target.animate) return;
+    if (reduce || !target.animate) { coinInJar(); return; }
     const jr = jar.getBoundingClientRect(), tr = target.getBoundingClientRect();
     const fly = target.cloneNode(); fly.className = "slip slip-fly";
     const endX = tr.left - jr.left, endY = tr.top - jr.top, startX = jr.width / 2 - tr.width / 2, startY = -26;
@@ -2553,7 +2577,7 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
       { transform: `translate(${startX}px, ${startY + 18}px) rotate(10deg) scale(1.3)`, opacity: 1, offset: .2 },
       { transform: `translate(${endX}px, ${endY}px) rotate(${rot}) scale(1)`, opacity: 1 }
     ], { duration: 750, easing: "cubic-bezier(.45,0,.4,1.35)" });
-    const finish = () => { target.style.visibility = ""; fly.remove(); jar.animate([{ transform:"rotate(0)" },{ transform:"rotate(-4deg)" },{ transform:"rotate(3deg)" },{ transform:"rotate(0)" }], { duration: 380, easing: "ease-out" }); };
+    const finish = () => { coinInJar(); target.style.visibility = ""; fly.remove(); jar.animate([{ transform:"rotate(0)" },{ transform:"rotate(-4deg)" },{ transform:"rotate(3deg)" },{ transform:"rotate(0)" }], { duration: 380, easing: "ease-out" }); };
     dropAnim.onfinish = finish; dropAnim.oncancel = () => { target.style.visibility = ""; fly.remove(); };
   }
   function renderJar(dropLast){
