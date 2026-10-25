@@ -2532,6 +2532,25 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
   function weekKey(d = new Date()){ const x = new Date(d); x.setHours(0,0,0,0); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return "jar-" + dayKey(x); }
   const SLIP_COLS = ["#F6C9BE","#FBF2D9","#E2EEF6","#E1EFE5","#ECE6F4"];
   function jarNotes(){ return (kvGet(weekKey()) || {}).notes || []; }
+  /* Sound: planting a flower in the gratitude garden. A soft pat of soil, then a gentle rising
+     bell chime as the flower blooms (pentatonic notes, so it always sounds calm). Web Audio only. */
+  function bloomSound(){
+    const ac = audio(); if (!ac) return;
+    const out = ac.createGain(); out.gain.value = 0.9; out.connect(ac.destination);
+    const t0 = ac.currentTime + 0.01;
+    const n = ac.createBufferSource(), b = ac.createBuffer(1, ac.sampleRate * 0.12, ac.sampleRate), d = b.getChannelData(0);   // soil pat
+    for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 3);
+    const lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 600; const ng = ac.createGain(); ng.gain.value = 0.5;
+    n.buffer = b; n.connect(lp).connect(ng).connect(out); n.start(t0);
+    [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => {                                      // C E G C: rising bloom chime
+      const t = t0 + 0.18 + i * 0.11;
+      [[1, 0.16, 1.4], [2.01, 0.05, 0.6], [3.02, 0.02, 0.3]].forEach(([mult, vol, dec]) => {   // soft bell: base + overtones
+        const o = ac.createOscillator(), g = ac.createGain(); o.type = "sine"; o.frequency.value = f * mult;
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + dec);
+        o.connect(g).connect(out); o.start(t); o.stop(t + dec + 0.05);
+      });
+    });
+  }
   /* Sound: a coin dropping into a glass jar. Built with Web Audio (no audio file):
      a bright metallic "clink" (inharmonic partials), a ringing glass body, and two smaller bounces. */
   function coinInJar(){
@@ -2961,6 +2980,7 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
     kvSet(k, cur);
     $("gInput").value = ""; $("gChars").textContent = "0 / 160"; $("plantCard").dataset.more = "0";
     renderGratitude(true); renderJar(false);
+    bloomSound();
     window.scrollTo({ top: 0, behavior: "smooth" });
     const st = gratStreak();
     if (firstToday) { confetti(); toast(st > 1 ? `Planted! ${st}-day gratitude streak` : "Planted! Your garden has begun"); }
