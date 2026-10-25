@@ -14,7 +14,7 @@ python3 -m http.server 8000
 
 then open http://localhost:8000.
 
-Demo login: **Ishita** / **12345**, or create a new teacher account on the registration page.
+Demo login: **Arun** / **12345**, or create a new teacher account on the registration page.
 
 ## Notes
 

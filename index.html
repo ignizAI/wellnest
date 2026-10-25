@@ -637,7 +637,7 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
     <form id="registerForm" class="auth-form" novalidate>
       <div class="field">
         <label for="regName">Full name</label>
-        <input id="regName" autocomplete="name" placeholder="e.g. Ishita Advani" required>
+        <input id="regName" autocomplete="name" placeholder="Your full name" required>
       </div>
       <div class="field">
         <label for="regSchool">School <span class="opt-tag">optional</span></label>
@@ -735,7 +735,7 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
       <div class="greet-card" id="greetCard" data-part="morning">
         <div class="greet-scene" id="greetScene" aria-hidden="true"></div>
         <div class="greet-text">
-          <h2 id="greeting">Good morning, Ishita</h2>
+          <h2 id="greeting">Good morning</h2>
           <p id="greetSub">Take a deep breath before first period.</p>
         </div>
       </div>
@@ -1058,7 +1058,7 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
       <div class="plan-top">
         <button type="button" class="back-btn" id="closePlanner" aria-label="Back" title="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
         <div class="plan-head">
-          <h2 id="planTitle">Let's plan your day, Ishita</h2>
+          <h2 id="planTitle">Let's plan your day</h2>
           <span class="sync" id="planSync" role="status"></span>
         </div>
       </div>
@@ -1148,14 +1148,14 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
         <div class="ph-avatar-wrap">
           <button type="button" class="ph-avatar" id="avatarBtn" aria-label="Change profile photo">
             <img id="avatarImg" alt="" hidden>
-            <span class="ph-initials" id="avatarInitials">I</span>
+            <span class="ph-initials" id="avatarInitials"></span>
           </button>
           <button type="button" class="ph-cam" id="camBtn" aria-label="Change profile photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></svg></button>
           <input type="file" id="photoInput" accept="image/*" hidden>
         </div>
         <div class="ph-text">
-          <h2 id="pfName">Ishita</h2>
-          <p class="ph-handle" id="pfHandle">@Ishita</p>
+          <h2 id="pfName"></h2>
+          <p class="ph-handle" id="pfHandle"></p>
           <p class="ph-school" id="pfSchoolLine"></p>
         </div>
         <div class="ph-photo-actions" id="photoActions" hidden>
@@ -1256,7 +1256,7 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
 <script>
 (function(){
   // Prototype credentials. Replace with a real authentication service before launch.
-  const DEMO_USER = "Ishita", DEMO_PASS = "12345";
+  const DEMO_USER = "Arun", DEMO_PASS = "12345";
   var currentUser = null;
   const SESSION_KEY = "wellnest.session";
 
