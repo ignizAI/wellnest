@@ -613,6 +613,32 @@ input[type=checkbox]{width:20px;height:20px;accent-color:#4F9566;flex:none;curso
 @media (max-width:360px){ .g-notes{grid-template-columns:1fr} }
 @media (prefers-reduced-motion: reduce){ .bloom,.sway,.sprout-glow{animation:none} }
 
+/* Interactive water */
+.glass{position:relative;transition:transform .15s}
+.glass:active{transform:scale(.88)}
+.glass.pop{animation:gpop .45s cubic-bezier(.3,1.6,.5,1)}
+@keyframes gpop{0%{transform:scale(.8)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+.water.rise{transform-box:fill-box;transform-origin:50% 100%;animation:rise .7s ease-out}
+@keyframes rise{from{transform:translateY(14px)}to{transform:translateY(0)}}
+.wave{animation:wave 2.4s ease-in-out infinite}
+@keyframes wave{0%,100%{transform:translateX(0)}50%{transform:translateX(-2px)}}
+.bub{opacity:0;animation:bub 1.1s ease-out forwards}
+.b2{animation-delay:.15s}.b3{animation-delay:.3s}
+@keyframes bub{0%{opacity:.9;transform:translateY(0)}100%{opacity:0;transform:translateY(-7px)}}
+.plus1{position:absolute;left:50%;top:-6px;transform:translateX(-50%);font-size:12px;color:#4A7FA3;pointer-events:none;animation:plus1 .9s ease-out forwards}
+@keyframes plus1{0%{opacity:0;transform:translate(-50%,6px)}25%{opacity:1}100%{opacity:0;transform:translate(-50%,-14px)}}
+.splash{position:absolute;left:50%;top:6px;width:26px;height:26px;margin-left:-13px;border-radius:50%;border:2px solid #A8C7D8;pointer-events:none;animation:splash .6s ease-out forwards}
+@keyframes splash{0%{opacity:.8;transform:scale(.3)}100%{opacity:0;transform:scale(1.4)}}
+.wt-bar{width:100%;height:6px;border-radius:99px;background:#EEF5FA;overflow:hidden;margin:2px 0 4px}
+.wt-bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#A8C7D8,#4A7FA3);transition:width .5s cubic-bezier(.3,1.3,.5,1)}
+#waterCount.bump{animation:bump .4s ease}
+@keyframes bump{50%{transform:scale(1.3);color:#4A7FA3}}
+#waterCount{display:inline-block}
+/* Reset sound toggle */
+.sound-btn{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(0,0,0,.08);background:rgba(255,255,255,.75);border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer;color:var(--ink);font-family:inherit}
+.sound-btn svg{width:16px;height:16px}
+@media (prefers-reduced-motion: reduce){ .glass.pop,.water.rise,.wave,.bub,.plus1,.splash,#waterCount.bump{animation:none} .plus1,.splash{display:none} }
+
 /* Weight rule (by request): only headlines are bold, everything else regular */
 *, *::before, *::after{font-weight:400 !important}
 h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
@@ -637,7 +663,7 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
     <form id="registerForm" class="auth-form" novalidate>
       <div class="field">
         <label for="regName">Full name</label>
-        <input id="regName" autocomplete="name" placeholder="Your full name" required>
+        <input id="regName" autocomplete="name" placeholder="e.g. Arun Mandook" required>
       </div>
       <div class="field">
         <label for="regSchool">School <span class="opt-tag">optional</span></label>
@@ -762,6 +788,7 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
           <div class="tile water-tile">
             <div class="wt-head"><b>Water</b><span id="waterCount">0 / 8</span></div>
             <div class="glasses" id="glasses" role="group" aria-label="Glasses of water today"></div>
+            <div class="wt-bar" aria-hidden="true"><i id="waterBar"></i></div>
             <span class="wt-note" id="waterNote">Tap a glass after each drink</span>
           </div>
         </div>
@@ -912,13 +939,13 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
 
       <div class="card puzzle">
         <div class="label card-title">Brain puzzle of the day</div>
-        <div class="q">2, 6, 12, 20, 30, ?</div>
+        <div class="q" id="pzQ"></div>
         <div class="opts" id="opts"></div>
         <p class="puzzle-msg" id="puzzleMsg">What comes next in the series? You get one try.</p>
         <div class="answer" id="puzzleAnswer" hidden>
           <div class="label">Answer</div>
-          <strong>42</strong>
-          <p>Each number is n × (n + 1): 1×2, 2×3, 3×4, 4×5, 5×6, so next is 6 × 7 = 42. The gaps also grow by 2 each time: 4, 6, 8, 10, 12.</p>
+          <strong id="pzAns"></strong>
+          <p id="pzWhy"></p>
         </div>
       </div>
       <section class="celebrate" id="intlDay" hidden aria-labelledby="celebrateLabel">
@@ -1241,6 +1268,10 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
   <button type="button" class="back-btn reset-close" id="resetClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   <div class="reset-inner">
     <div class="reset-label">2-minute reset</div>
+    <button type="button" class="sound-btn" id="soundBtn" aria-pressed="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path id="soundWaves" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg>
+      <span id="soundLabel">Breathing sound on</span>
+    </button>
     <div class="breath"><div class="orb" id="orb"></div><div class="orb-ring"></div></div>
     <p class="phase" id="phase" aria-live="polite">Get comfortable</p>
     <p class="rtime" id="rtime">2:00</p>
@@ -1872,8 +1903,28 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
     }
   } catch(e){}
 
-  /* Puzzle: n(n+1) → 42. One attempt per day, locked once answered. */
-  const ANSWER = 42;
+  /* Puzzle of the day: generated from the date, so each day gets a new puzzle that never repeats.
+     dayNo = days since 1 Jan 2026; type = dayNo % 6, m = floor(dayNo / 6). Each puzzle type maps m to its
+     numbers one-to-one, so no two days can produce the same puzzle. One attempt per day, locked once answered. */
+  function puzzleFor(date){
+    const d0 = new Date(2026, 0, 1), dd = new Date(date); dd.setHours(0,0,0,0);
+    const dayNo = Math.max(0, Math.round((dd - d0) / 86400000)), type = dayNo % 6, m = Math.floor(dayNo / 6);
+    let seq = [], ans, why;
+    if (type === 0) { const a = 3 + m % 17, step = 3 + Math.floor(m / 17); for (let i = 0; i < 5; i++) seq.push(a + i*step); ans = a + 5*step; why = `Each number goes up by ${step}, so the next is ${seq[4]} + ${step} = ${ans}.`; }
+    else if (type === 1) { const st = 1 + m % 9, k = 1 + Math.floor(m / 9); let x = st; for (let i = 0; i < 5; i++) { seq.push(x); x = 2*x + k; } ans = x; why = `Each number is doubled, then ${k} is added: ${seq[4]} × 2 + ${k} = ${ans}.`; }
+    else if (type === 2) { const st = 2 + m % 15, g = 1 + Math.floor(m / 15); let x = st; for (let i = 0; i < 5; i++) { seq.push(x); x += g + i; } ans = x; why = `The gaps grow by 1 each time (${g}, ${g+1}, ${g+2}, ${g+3}), so the next gap is ${g+4}: ${seq[4]} + ${g+4} = ${ans}.`; }
+    else if (type === 3) { const n0 = 1 + m % 6, c = Math.floor(m / 6); for (let i = 0; i < 5; i++) seq.push((n0+i)*(n0+i) + c); ans = (n0+5)*(n0+5) + c; why = c ? `Each number is a square plus ${c}: ${n0}² + ${c}, ${n0+1}² + ${c} … so next is ${n0+5}² + ${c} = ${ans}.` : `These are square numbers: ${n0}², ${n0+1}² … so next is ${n0+5}² = ${ans}.`; }
+    else if (type === 4) { const st = 10 + m % 10, up = 5 + Math.floor(m / 10), down = 2; let x = st; for (let i = 0; i < 5; i++) { seq.push(x); x = i % 2 === 0 ? x + up : x - down; } ans = x; why = `The pattern alternates: add ${up}, then take away ${down}. After ${seq[4]} comes + ${up} = ${ans}.`; }
+    else { const a = 1 + m % 8, b = a + 1 + Math.floor(m / 8); seq = [a, b]; while (seq.length < 5) seq.push(seq[seq.length-1] + seq[seq.length-2]); ans = seq[3] + seq[4]; why = `Each number is the sum of the two before it: ${seq[3]} + ${seq[4]} = ${ans}.`; }
+    // three close wrong answers, placed in a date-based order
+    const deltas = [-2, 2, -3, 3, 4, -4, 1, -1, 5], wrong = [];
+    for (let i = 0; wrong.length < 3; i++) { const w = ans + deltas[(dayNo + i) % deltas.length] * (i >= deltas.length ? 2 : 1); if (w > 0 && w !== ans && !wrong.includes(w)) wrong.push(w); }
+    const options = [ans, ...wrong], pos = dayNo % 4; [options[0], options[pos]] = [options[pos], options[0]];
+    return { q: seq.join(", ") + ", ?", ans, why, options, dayNo };
+  }
+  const PZ = puzzleFor(new Date());
+  $("pzQ").textContent = PZ.q; $("pzAns").textContent = PZ.ans; $("pzWhy").textContent = PZ.why;
+  const ANSWER = PZ.ans;
   const PZ_KEY = "wellnest.puzzle." + new Date().toDateString();
   const opts = $("opts");
   function lockPuzzle(picked){
@@ -1886,7 +1937,7 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
     $("puzzleMsg").textContent = picked === ANSWER ? "Correct! Well done." : `You chose ${picked}. Not quite this time.`;
     $("puzzleAnswer").hidden = false;
   }
-  [36, 40, 42, 48].forEach(n => {
+  PZ.options.forEach(n => {
     const b = document.createElement("button");
     b.className = "opt"; b.type = "button"; b.textContent = n;
     b.addEventListener("click", () => {
@@ -1897,7 +1948,7 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
     });
     opts.appendChild(b);
   });
-  try { const saved = Number(localStorage.getItem(PZ_KEY)); if (saved) lockPuzzle(saved); } catch(e){}
+  try { const saved = Number(localStorage.getItem(PZ_KEY)); if (saved && PZ.options.includes(saved)) lockPuzzle(saved); } catch(e){}
 
 
   /* ---------- Plan my day ---------- */
@@ -2234,20 +2285,41 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
     waterCount = getDay(new Date()).water || 0; renderWater(); renderTrend(); renderSupport(); renderIndex();
   });
 
-  /* Water */
-  const GLASS = (full) => `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12l-1.6 17.2a1 1 0 0 1-1 .8H8.6a1 1 0 0 1-1-.8z" fill="${full ? "#CFE5F1" : "none"}" stroke="${full ? "#4A7FA3" : "#B9C4CC"}" stroke-width="1.6" stroke-linejoin="round"/>${full ? '<path d="M7.1 9h9.8l-1 11H8.1z" fill="#8FB3CA"/>' : ""}</svg>`;
-  function renderWater(){
+  /* Water: each tap fills a glass with a rising-water animation, bubbles, a splash, a soft "plip" and a "+1" */
+  let sfx = null;
+  function audio(){ try { if (!sfx) sfx = new (window.AudioContext || window.webkitAudioContext)(); if (sfx.state === "suspended") sfx.resume(); return sfx; } catch(e){ return null; } }
+  function plip(n){
+    const ac = audio(); if (!ac) return;
+    const notes = [523, 587, 659, 698, 784, 880, 988, 1047], f = notes[Math.max(0, Math.min(7, n - 1))], t = ac.currentTime;
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.type = "sine"; o.frequency.setValueAtTime(f * 1.6, t); o.frequency.exponentialRampToValueAtTime(f, t + 0.12);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.18, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.35);
+    o.connect(g).connect(ac.destination); o.start(t); o.stop(t + 0.4);
+  }
+  const GLASS = (full, fresh, i) => `<svg viewBox="0 0 24 24" aria-hidden="true"><defs><clipPath id="gc${i}"><path d="M6.2 3.2h11.6l-1.6 17a.8.8 0 0 1-.8.6H8.6a.8.8 0 0 1-.8-.6z"/></clipPath></defs>
+    <g clip-path="url(#gc${i})">${full ? `<g class="water${fresh ? " rise" : ""}"><rect x="5" y="8" width="14" height="14" fill="#8FB3CA"/><path d="M5 8 q3.5 -1.6 7 0 t7 0 v2 h-14z" fill="#A8C7D8" class="wave"/>${fresh ? '<circle cx="10" cy="17" r=".9" fill="#fff" class="bub b1"/><circle cx="13.5" cy="18.5" r=".7" fill="#fff" class="bub b2"/><circle cx="12" cy="15" r=".6" fill="#fff" class="bub b3"/>' : ""}</g>` : ""}</g>
+    <path d="M6 3h12l-1.6 17.2a1 1 0 0 1-1 .8H8.6a1 1 0 0 1-1-.8z" fill="none" stroke="${full ? "#4A7FA3" : "#B9C4CC"}" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
+  const WATER_MSGS = ["Tap a glass after each drink", "First sip done. Great start!", "Two down. Keep it flowing", "Three! Your voice is happier already", "Halfway there. Lovely", "Five glasses. You're on a roll", "Six! Nearly there", "Seven. One more to go!", "Goal reached for today. Well done!"];
+  function renderWater(fresh){
     const g = $("glasses"); g.innerHTML = "";
     for (let i = 0; i < 8; i++) {
-      const b = document.createElement("button"); b.type = "button"; b.className = "glass";
+      const b = document.createElement("button"); b.type = "button"; b.className = "glass" + (i === fresh - 1 ? " pop" : "");
       b.setAttribute("aria-label", `Glass ${i+1}${i < waterCount ? ", drunk" : ""}`);
-      b.innerHTML = GLASS(i < waterCount);
-      b.addEventListener("click", () => { waterCount = (i + 1 === waterCount) ? i : i + 1; saveDayStat({ water: waterCount }); renderWater(); renderIndex(); renderNudge(); if (waterCount === 8) { toast("8 glasses. Your voice says thank you."); confetti(); } });
+      b.innerHTML = GLASS(i < waterCount, i === fresh - 1, i) + (i === fresh - 1 ? '<span class="plus1" aria-hidden="true">+1</span><span class="splash" aria-hidden="true"></span>' : "");
+      b.addEventListener("click", () => {
+        const filling = !(i + 1 === waterCount);
+        waterCount = filling ? i + 1 : i;
+        saveDayStat({ water: waterCount }); renderWater(filling ? waterCount : 0); renderIndex(); renderNudge();
+        if (filling) { plip(waterCount); try { navigator.vibrate && navigator.vibrate(12); } catch(e){} }
+        const c = $("waterCount"); c.classList.remove("bump"); void c.offsetWidth; c.classList.add("bump");
+        if (filling && waterCount === 8) { toast("8 glasses. Your voice says thank you."); confetti(); }
+      });
       g.appendChild(b);
     }
     $("waterCount").textContent = waterCount + " / 8";
     $("chipWaterText").textContent = waterCount + "/8";
-    $("waterNote").textContent = waterCount === 0 ? "Tap a glass after each drink" : waterCount < 4 ? "Keep sipping between classes" : waterCount < 8 ? "Nice, your voice will thank you" : "Goal reached for today";
+    $("waterBar").style.width = (waterCount / 8 * 100) + "%";
+    $("waterNote").textContent = WATER_MSGS[waterCount];
   }
 
   /* Weekly trend of the Wellbeing Index */
@@ -2314,14 +2386,40 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
 
   /* 2-minute reset */
   let resetTimers = [];
-  function stopReset(){ resetTimers.forEach(clearTimeout); resetTimers.forEach(clearInterval); resetTimers = []; $("orb").classList.remove("in"); }
+  /* Breathing sound: soft filtered "air" noise that swells on the in-breath and fades on the out-breath */
+  let soundOn = true, breath = null;
+  function startBreathSound(){
+    const ac = audio(); if (!ac || breath) return;
+    const len = ac.sampleRate * 2, buf = ac.createBuffer(1, len, ac.sampleRate), d = buf.getChannelData(0);
+    let last = 0; for (let i = 0; i < len; i++) { const w = Math.random() * 2 - 1; last = (last + 0.02 * w) / 1.02; d[i] = last * 3.5; }   // soft brown-ish noise
+    const src = ac.createBufferSource(); src.buffer = buf; src.loop = true;
+    const bp = ac.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 500; bp.Q.value = 0.7;
+    const lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 1800;
+    const g = ac.createGain(); g.gain.value = 0.0001;
+    src.connect(bp).connect(lp).connect(g).connect(ac.destination); src.start();
+    breath = { src, bp, g };
+  }
+  function breathPhase(kind){   // kind: "in" | "hold" | "out"
+    if (!breath || !soundOn) return;
+    const ac = audio(), t = ac.currentTime, { g, bp } = breath;
+    g.gain.cancelScheduledValues(t); bp.frequency.cancelScheduledValues(t);
+    g.gain.setValueAtTime(Math.max(g.gain.value, 0.0001), t); bp.frequency.setValueAtTime(bp.frequency.value, t);
+    if (kind === "in") { g.gain.linearRampToValueAtTime(0.55, t + 3.6); g.gain.linearRampToValueAtTime(0.12, t + 4); bp.frequency.linearRampToValueAtTime(950, t + 3.6); }
+    else if (kind === "out") { g.gain.linearRampToValueAtTime(0.5, t + 0.4); g.gain.linearRampToValueAtTime(0.0001, t + 3.9); bp.frequency.linearRampToValueAtTime(380, t + 3.9); }
+    else { g.gain.linearRampToValueAtTime(0.0001, t + 0.6); }
+  }
+  function stopBreathSound(){ if (!breath) return; try { const t = audio().currentTime; breath.g.gain.cancelScheduledValues(t); breath.g.gain.setValueAtTime(breath.g.gain.value, t); breath.g.gain.linearRampToValueAtTime(0.0001, t + 0.3); const s = breath.src; setTimeout(() => { try { s.stop(); } catch(e){} }, 400); } catch(e){} breath = null; }
+  function renderSoundBtn(){ $("soundBtn").setAttribute("aria-pressed", String(soundOn)); $("soundLabel").textContent = soundOn ? "Breathing sound on" : "Breathing sound off"; $("soundWaves").style.display = soundOn ? "" : "none"; }
+  $("soundBtn").addEventListener("click", () => { soundOn = !soundOn; renderSoundBtn(); if (!soundOn && breath) { const t = audio().currentTime; breath.g.gain.cancelScheduledValues(t); breath.g.gain.setValueAtTime(0.0001, t); } });
+  function stopReset(){ resetTimers.forEach(clearTimeout); resetTimers.forEach(clearInterval); resetTimers = []; $("orb").classList.remove("in"); stopBreathSound(); }
   function openReset(){
     stopReset();
     $("resetView").hidden = false; $("resetDone").hidden = true;
     let left = 120; $("rtime").textContent = "2:00"; $("phase").textContent = "Get comfortable";
     const phases = [["Breathe in", true], ["Hold", true], ["Breathe out", false], ["Hold", false]];
     let k = 0;
-    const step = () => { const [t, inn] = phases[k % 4]; $("phase").textContent = t; $("orb").classList.toggle("in", inn); k++; };
+    renderSoundBtn(); startBreathSound();
+    const step = () => { const [t, inn] = phases[k % 4]; $("phase").textContent = t; $("orb").classList.toggle("in", inn); breathPhase(k % 4 === 0 ? "in" : k % 4 === 2 ? "out" : "hold"); k++; };
     resetTimers.push(setTimeout(() => { step(); resetTimers.push(setInterval(step, 4000)); }, 1500));
     resetTimers.push(setInterval(() => {
       left--; $("rtime").textContent = Math.floor(left/60) + ":" + String(left%60).padStart(2,"0");
