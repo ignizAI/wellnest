@@ -386,7 +386,7 @@ input[type=checkbox]{width:20px;height:20px;accent-color:#4F9566;flex:none;curso
 #tab-home[data-mode="morning"] [data-sec="day"]{order:1} #tab-home[data-mode="morning"] [data-sec="now"]{order:2} #tab-home[data-mode="morning"] [data-sec="streak"]{order:3} #tab-home[data-mode="morning"] [data-sec="foryou"]{order:4} #tab-home[data-mode="morning"] [data-sec="wind"]{display:none}
 #tab-home[data-mode="school"] [data-sec="now"]{order:1} #tab-home[data-mode="school"] [data-sec="day"]{order:2} #tab-home[data-mode="school"] [data-sec="streak"]{order:3} #tab-home[data-mode="school"] [data-sec="foryou"]{order:4} #tab-home[data-mode="school"] [data-sec="wind"]{display:none}
 #tab-home[data-mode="evening"] [data-sec="day"]{order:1} #tab-home[data-mode="evening"] [data-sec="wind"]{order:2} #tab-home[data-mode="evening"] [data-sec="streak"]{order:3} #tab-home[data-mode="evening"] [data-sec="now"]{order:4} #tab-home[data-mode="evening"] [data-sec="foryou"]{order:5}
-#tab-home[data-mode="night"] [data-sec="wind"]{order:1} #tab-home[data-mode="night"] [data-sec="day"]{order:2} #tab-home[data-mode="night"] [data-sec="foryou"]{order:3} #tab-home[data-mode="night"] [data-sec="streak"]{order:4} #tab-home[data-mode="night"] [data-sec="now"]{display:none}
+#tab-home[data-mode="night"] [data-sec="wind"]{order:1} #tab-home[data-mode="night"] [data-sec="day"]{order:2} #tab-home[data-mode="night"] [data-sec="foryou"]{order:3} #tab-home[data-mode="night"] [data-sec="streak"]{order:4} #tab-home[data-mode="night"] [data-sec="now"]{order:5}
 /* Up next */
 .upnext{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:12px 14px;border-radius:16px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-family:inherit;color:var(--ink)}
 .upnext:hover{border-color:#E8A59A}
@@ -3278,7 +3278,7 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
   function setHomeMode(){
     const h = new Date().getHours();
     $("tab-home").dataset.mode = h >= 5 && h < 8 ? "morning" : h >= 8 && h < 16 ? "school" : h >= 16 && h < 21 ? "evening" : "night";
-    $("chipWater").hidden = $("tab-home").dataset.mode === "night";
+    $("chipWater").hidden = false;
   }
   function refreshHome(){ setHomeMode(); renderUpNext(); renderNudge(); renderWind(); if (window.__schoolReady) renderSchool(); }
   waterCount = getDay(new Date()).water || 0;
