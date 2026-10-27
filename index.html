@@ -739,20 +739,45 @@ body.typing nav.tabs{display:none}
 .lang-tg svg{width:17px;height:17px;flex:none}
 .lang-tg .lang-chev{width:15px;height:15px;transition:transform .2s;opacity:.7}
 .lang-tg[aria-expanded="true"] .lang-chev{transform:rotate(180deg)}
-.lang-menu{position:absolute;top:calc(100% + 8px);right:0;min-width:190px;background:#fff;border:1px solid #ECEDE8;border-radius:16px;padding:6px;box-shadow:0 18px 40px -14px rgba(23,42,58,.3);animation:lmIn .18s ease}
-@keyframes lmIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
-.lang-menu button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;border:0;background:none;border-radius:11px;padding:10px 12px;cursor:pointer;color:var(--ink);font:inherit;text-align:start}
-.lang-menu button:hover,.lang-menu button:focus-visible{background:#F3F4F1;outline:none}
-.lang-menu button span{display:flex;flex-direction:column}
-.lang-menu b{font-size:15px;font-weight:600}
-.lang-menu small{font-size:12px;color:#6E787F}
-.lang-menu [lang=ar] b{font-family:"IBM Plex Sans Arabic",sans-serif}
-.lang-menu .lm-ck{width:18px;height:18px;color:#4F9566;visibility:hidden}
-.lang-menu [aria-checked="true"]{background:#EEF6F0}
-.lang-menu [aria-checked="true"] .lm-ck{visibility:visible}
+.lang-code{font-size:11.5px;font-weight:600;line-height:1;padding:3px 6px;border-radius:6px;background:#EEF6F0;color:#3F8358;letter-spacing:.03em}
+.lang-sheet{position:fixed;inset:0;z-index:90;display:flex;align-items:flex-end;justify-content:center}
+.ls-backdrop{position:absolute;inset:0;background:rgba(18,24,30,.38);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);opacity:0;transition:opacity .25s ease}
+.ls-panel{position:relative;width:100%;max-width:460px;background:#fff;border-radius:26px 26px 0 0;padding:10px 18px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -18px 50px -20px rgba(18,24,30,.35);transform:translateY(100%);transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+.lang-sheet.open .ls-backdrop{opacity:1}
+.lang-sheet.open .ls-panel{transform:none}
+@media (min-width:600px){ .lang-sheet{align-items:center} .ls-panel{border-radius:26px;transform:translateY(16px) scale(.97);opacity:0;transition:transform .25s ease,opacity .25s ease} .lang-sheet.open .ls-panel{opacity:1} .ls-handle{display:none} }
+.ls-handle{display:block;width:40px;height:5px;border-radius:99px;background:#E2E3DE;margin:0 auto 14px}
+.ls-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px}
+.ls-ic{flex:none;width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#EEF6F0,#E2EEF6);color:#3F8358;display:grid;place-items:center}
+.ls-ic svg{width:22px;height:22px}
+.ls-head div{flex:1;min-width:0}
+.ls-head h3{margin:2px 0 2px;font-size:18px;font-weight:600}
+.ls-head p{margin:0;font-size:13px;color:#5D6870;line-height:1.4}
+.ls-x{flex:none;width:34px;height:34px;border:0;border-radius:50%;background:#F3F4F1;display:grid;place-items:center;cursor:pointer;color:var(--ink)}
+.ls-x svg{width:16px;height:16px}
+.ls-list{display:flex;flex-direction:column;gap:10px}
+.ls-list button{display:flex;align-items:center;gap:14px;width:100%;border:1.5px solid #ECEDE8;background:#fff;border-radius:18px;padding:14px 16px;cursor:pointer;font:inherit;color:var(--ink);text-align:start;transition:border-color .2s,background .2s,box-shadow .2s}
+.ls-list button:hover{background:#FAFAF8}
+.ls-list button:focus-visible{outline:none;box-shadow:0 0 0 4px rgba(123,174,138,.25)}
+.ls-list button[aria-checked="true"]{border-color:#7BAE8A;background:#F4FAF6;box-shadow:0 8px 20px -14px rgba(52,116,76,.6)}
+.ls-mono{flex:none;width:44px;height:44px;border-radius:14px;background:#F3F4F1;display:grid;place-items:center;font-size:17px;font-weight:600;font-family:var(--font-body)}
+.ls-mono.ar{font-family:"IBM Plex Sans Arabic",sans-serif;font-size:21px}
+.ls-list [aria-checked="true"] .ls-mono{background:linear-gradient(135deg,#62A678,#3F8358);color:#fff}
+.ls-txt{flex:1;display:flex;flex-direction:column;gap:1px;min-width:0}
+.ls-txt b{font-size:16.5px;font-weight:600}
+.ls-list [lang=ar] .ls-txt b{font-family:"IBM Plex Sans Arabic",sans-serif;font-size:17.5px}
+.ls-txt small{font-size:12.5px;color:#6E787F}
+.ls-txt b,.ls-txt small{unicode-bidi:plaintext;text-align:start}
+.ls-txt small[lang=ar]{font-family:"IBM Plex Sans Arabic",sans-serif}
+.ls-txt small[lang=en]{font-family:var(--font-body)}
+.ls-radio{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid #CDD1CB;position:relative;transition:border-color .2s}
+.ls-radio::after{content:"";position:absolute;inset:3px;border-radius:50%;background:#4F9566;transform:scale(0);transition:transform .2s cubic-bezier(.3,1.6,.5,1)}
+.ls-list [aria-checked="true"] .ls-radio{border-color:#4F9566}
+.ls-list [aria-checked="true"] .ls-radio::after{transform:scale(1)}
+body.ls-lock{overflow:hidden}
+@media (prefers-reduced-motion: reduce){ .ls-panel,.ls-backdrop,.ls-radio::after{transition:none} }
 .login{position:relative}
 [dir=rtl] .lang-wrap{right:auto;left:16px}
-[dir=rtl] .lang-menu{right:auto;left:0}
 [dir=rtl] .lang-tg{padding:7px 12px 7px 10px}
 html[lang=ar] body,html[lang=ar] button,html[lang=ar] input,html[lang=ar] select,html[lang=ar] textarea{font-family:"IBM Plex Sans Arabic","Outfit",system-ui,sans-serif}
 html[lang=ar] .sec-label,html[lang=ar] .label{letter-spacing:0}
@@ -1355,17 +1380,6 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
   </section>
 
   <section class="login fade" id="loginView" aria-labelledby="loginTitle">
-    <div class="lang-wrap">
-      <button type="button" class="lang-tg" id="langLogin" aria-haspopup="menu" aria-expanded="false" aria-controls="langMenu">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 3 2.6 15 0 18M12 3c-2.6 3-2.6 15 0 18"/></svg>
-        <span id="langLoginTxt">Language</span>
-        <svg class="lang-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-      </button>
-      <div class="lang-menu" id="langMenu" role="menu" hidden>
-        <button type="button" role="menuitemradio" data-lang="en" lang="en" dir="ltr" aria-checked="true"><span><b>English</b><small lang="ar">الإنجليزية</small></span><svg class="lm-ck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg></button>
-        <button type="button" role="menuitemradio" data-lang="ar" lang="ar" dir="rtl" aria-checked="false"><span><b>العربية</b><small>Arabic</small></span><svg class="lm-ck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg></button>
-      </div>
-    </div>
     <div class="brand">
       <svg viewBox="0 0 64 64" aria-hidden="true">
         <rect x="0.5" y="0.5" width="63" height="63" rx="16" fill="#FFFFFF" stroke="#E4E4E0"/>
@@ -2021,8 +2035,6 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
       <section class="card" id="pulseCard"></section>
 
       <section class="card pr-settings">
-        <label class="pr-row" for="pfLang"><span class="pr-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 3 2.5 15 0 18M12 3c-2.5 3-2.5 15 0 18"/></svg></span><span class="pr-k" id="langLbl">Language</span>
-          <select id="pfLang"><option value="en">English</option><option value="ar">العربية</option></select></label>
         <div class="pr-row"><span class="pr-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M8 3v4M16 3v4M3.5 10h17M8 14h2M14 14h2M8 17h2"/></svg></span><span class="pr-k"><span id="sdLbl">My school day</span><small id="sdVal"></small></span><button type="button" class="pr-edit" id="sdEdit">Edit</button></div>
         <button type="button" class="pr-row pr-btnrow" id="ndPrev"><span class="pr-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 10a6 6 0 0 1 12 0c0 4.5 1.5 6 2 7H4c.5-1 2-2.5 2-7z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></span><span class="pr-k" id="ndPrevLbl">Preview a nudge</span></button>
         <label class="pr-row" for="pfRemind" style="border-top:1px solid var(--line)"><span class="pr-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 10a6 6 0 0 1 12 0c0 4.5 1.5 6 2 7H4c.5-1 2-2.5 2-7z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></span><span class="pr-k" id="remindLabel">Schedule reminder</span>
@@ -4839,7 +4851,7 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
     previewNudge:["Preview a nudge","معاينة تنبيه"],
     obSkip:["Skip for now","تخطَّ الآن"], obNext:["Next","التالي"], obBack:["Back","رجوع"], obFinish:["Start using WellNest","ابدأ استخدام WellNest"], obSave:["Save","حفظ"],
     obStep:["Step {n} of {t}","الخطوة {n} من {t}"],
-    ob1T:["Welcome to WellNest","مرحبًا بك في WellNest"], ob1S:["Choose your language. You can change it any time on the Me page.","اختر لغتك. يمكنك تغييرها في أي وقت من صفحة حسابي."],
+    ob1T:["Welcome to WellNest","مرحبًا بك في WellNest"], ob1S:["Let's set WellNest up around your school day. It takes about a minute, and you can change anything later on the Me page.","اختر لغتك. يمكنك تغييرها في أي وقت من صفحة حسابي."],
     ob2T:["About your teaching","عن عملك في التدريس"], ob2S:["This helps us tailor tips to your school.","يساعدنا ذلك على تخصيص النصائح لمدرستك."],
     schoolType:["School type","نوع المدرسة"], public:["Public","حكومية"], private:["Private","خاصة"],
     curriculum:["Curriculum","المنهج"], cMoe:["UAE MoE","وزارة التربية الإماراتية"], cBritish:["British","بريطاني"], cAmerican:["American","أمريكي"], cIB:["IB","البكالوريا الدولية"], cIndian:["Indian","هندي"], cOther:["Other","آخر"],
@@ -4902,7 +4914,9 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
   document.body.insertAdjacentHTML("beforeend", `<div class="nudge-bar" id="nudgeBar" role="alertdialog" aria-labelledby="ndTitle" hidden><div class="nd-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 10a6 6 0 0 1 12 0c0 4.5 1.5 6 2 7H4c.5-1 2-2.5 2-7z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></div><div class="nd-txt"><b id="ndTitle"></b><span id="ndBody"></span><div class="nd-acts" id="ndActs"></div></div><button type="button" class="nd-x" id="ndClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
   <div class="ob-view" id="obView" role="dialog" aria-modal="true" aria-label="WellNest setup" hidden><div class="ob-box"><div class="ob-top"><div class="ob-prog" id="obProg"></div><span class="ob-steptxt" id="obStepTxt"></span><button type="button" class="ob-skip" id="obSkip">Skip for now</button><button type="button" class="nd-x" id="obX" aria-label="Close" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><div class="ob-body" id="obBody"></div><div class="ob-foot"><button type="button" class="ci-navbtn" id="obBack">Back</button><button type="button" class="btn" id="obNext">Next</button></div></div></div>`);
   /* ================= Language (English / Arabic, RTL) ================= */
-  function L(){ try { return localStorage.getItem("wellnest.lang") === "ar" ? "ar" : "en"; } catch(e){ return "en"; } }
+  // English only for now. Arabic strings stay in I18N for a future release.
+  try { localStorage.removeItem("wellnest.lang"); } catch(e){}
+  function L(){ return "en"; }
   function t(k, vars){ const e = I18N && I18N[k]; let s = e ? (L() === "ar" ? e[1] : e[0]) : k; if (vars && typeof s === "string") Object.keys(vars).forEach(v => { s = s.split("{" + v + "}").join(vars[v]); }); return s; }
   function setTextKeep(el, txt){ // replace the visible text but keep icons inside the element
     const nodes = [...el.childNodes].filter(n => n.nodeType === 3 && n.textContent.trim());
@@ -4924,8 +4938,6 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
     try { localStorage.setItem("wellnest.lang", l); } catch(e){}
     document.documentElement.lang = l; document.documentElement.dir = l === "ar" ? "rtl" : "ltr";
     applyStatic(); try { $("howBtn").textContent = $("howBox").hidden ? t("howEarn") : t("hide"); } catch(e){}
-    $("langLoginTxt").textContent = l === "ar" ? "اللغة" : "Language";
-    document.querySelectorAll("#langMenu [data-lang]").forEach(b => b.setAttribute("aria-checked", String(b.dataset.lang === l)));
     if (!$("appView").hidden) { renderSchool(); renderWork(); renderPulse(); renderMeSchool(); renderRewards(); renderShield(); renderMilestones(); $("howBtn").textContent = $("howBox").hidden ? t("howEarn") : t("hide"); try { renderGreeting($("greeting").querySelector(".greet-name").textContent); } catch(e){} }
     if (!$("obView").hidden) obRender();
   }
@@ -5152,8 +5164,7 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
     const steps = OB_STEPS[ob.mode], step = steps[ob.idx], d = ob.d, last = ob.idx === steps.length - 1;
     let h = "";
     if (step === 1) h = `<div class="ob-logo" aria-hidden="true"><svg viewBox="0 0 64 64"><rect width="64" height="64" rx="18" fill="#fff"/><path d="M32 22c-4-4-14-4-16 6-2 9 4 22 10 22 3 0 4-2 6-2s3 2 6 2c6 0 12-13 10-22-2-10-12-10-16-6z" fill="#E8A59A"/><path d="M32 46c-6-4-10-8-10-13a5 5 0 0 1 10-1 5 5 0 0 1 10 1c0 5-4 9-10 13z" fill="#fff"/><path d="M32 22c0-5 3-9 8-10-1 5-4 8-8 10z" fill="#4F9566"/></svg></div>
-      <h2>${t("ob1T")}</h2><p class="ob-sub">${t("ob1S")}</p>
-      <div class="ob-lang">${[["en","English","Continue in English"],["ar","العربية","المتابعة بالعربية"]].map(([v, n, s]) => `<button type="button" class="ob-lg" data-lang="${v}" aria-pressed="${L() === v}" lang="${v}" dir="${v === "ar" ? "rtl" : "ltr"}"><b>${n}</b><span>${s}</span></button>`).join("")}</div>`;
+      <h2>${t("ob1T")}</h2><p class="ob-sub">${t("ob1S")}</p>`;
     if (step === 2) h = `<h2>${t("ob2T")}</h2><p class="ob-sub">${t("ob2S")}</p>
       <h4>${t("schoolType")}</h4><div class="ob-chips">${chip("type","public",d.type==="public",t("public"))}${chip("type","private",d.type==="private",t("private"))}</div>
       <h4>${t("curriculum")}</h4><div class="ob-chips">${[["moe","cMoe"],["british","cBritish"],["american","cAmerican"],["ib","cIB"],["indian","cIndian"],["other","cOther"]].map(([v,k]) => chip("curriculum", v, d.curriculum === v, t(k))).join("")}</div>
@@ -5239,22 +5250,12 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
   }
   $("pulseCard").addEventListener("click", e => { const b = e.target.closest("[data-pl]"); if (!b) return; obStart("pulse"); ob.base = b.dataset.pl === "base"; });
   function renderMeSchool(){
-    if (!$("pfLang")) return;
-    $("pfLang").value = L(); $("langLbl").textContent = t("language"); $("sdLbl").textContent = t("schoolDay"); $("sdEdit").textContent = t("edit"); $("ndPrevLbl").textContent = t("previewNudge");
+    if (!$("sdLbl")) return;
+    $("sdLbl").textContent = t("schoolDay"); $("sdEdit").textContent = t("edit"); $("ndPrevLbl").textContent = t("previewNudge");
     const S = sch(); $("sdVal").textContent = S.setup ? `${tfmt(tMin(S.start))} – ${tfmt(tMin(S.end))} · ${S.periods} × ${periodLen(S)} ${t("mUnit")}` : "";
   }
-  $("pfLang").addEventListener("change", e => setLang(e.target.value));
   $("sdEdit").addEventListener("click", () => obStart(sch().setup ? "edit" : "full"));
   $("ndPrev").addEventListener("click", () => { const kinds = ["warm","free","b2b","end"]; const k = kinds[(+($("ndPrev").dataset.i || 0)) % 4]; $("ndPrev").dataset.i = (+($("ndPrev").dataset.i || 0)) + 1; showNudge(NUDGE[k]()); });
-  function langMenu(open){ $("langMenu").hidden = !open; $("langLogin").setAttribute("aria-expanded", String(open)); if (open) (($("langMenu").querySelector('[aria-checked="true"]')) || $("langMenu").querySelector("button")).focus(); }
-  $("langLogin").addEventListener("click", e => { e.stopPropagation(); langMenu($("langMenu").hidden); });
-  $("langMenu").addEventListener("click", e => { const b = e.target.closest("[data-lang]"); if (!b) return; setLang(b.dataset.lang); langMenu(false); $("langLogin").focus(); });
-  document.addEventListener("click", e => { if (!$("langMenu").hidden && !e.target.closest(".lang-wrap")) langMenu(false); });
-  $("langMenu").addEventListener("keydown", e => {
-    const items = [...$("langMenu").querySelectorAll("button")], i = items.indexOf(document.activeElement);
-    if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); items[(i + (e.key === "ArrowDown" ? 1 : items.length - 1)) % items.length].focus(); }
-    if (e.key === "Escape") { langMenu(false); $("langLogin").focus(); }
-  });
   setLang(L());
 
   window.__schoolReady = true;
