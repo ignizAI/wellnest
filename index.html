@@ -732,9 +732,28 @@ body.typing nav.tabs{display:none}
 [dir=rtl] .btn-arr{transform:scaleX(-1)}
 [dir=rtl] .btn-auth:hover .btn-arr{transform:scaleX(-1) translateX(3px)}
 /* ---------- Arabic / RTL ---------- */
-.lang-tg{position:absolute;top:14px;right:16px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;font:inherit;font-size:14px;cursor:pointer;color:var(--ink);z-index:2;font-family:"IBM Plex Sans Arabic",var(--font-body)}
+.lang-wrap{position:absolute;top:14px;right:16px;z-index:5}
+.lang-tg{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,.95);background:rgba(255,255,255,.86);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-radius:999px;padding:7px 10px 7px 12px;font:inherit;font-size:14px;font-weight:500;cursor:pointer;color:var(--ink);box-shadow:0 4px 14px -6px rgba(23,42,58,.2);transition:box-shadow .2s}
+.lang-tg:hover{box-shadow:0 6px 18px -6px rgba(23,42,58,.28)}
+.lang-tg:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(123,174,138,.35)}
+.lang-tg svg{width:17px;height:17px;flex:none}
+.lang-tg .lang-chev{width:15px;height:15px;transition:transform .2s;opacity:.7}
+.lang-tg[aria-expanded="true"] .lang-chev{transform:rotate(180deg)}
+.lang-menu{position:absolute;top:calc(100% + 8px);right:0;min-width:190px;background:#fff;border:1px solid #ECEDE8;border-radius:16px;padding:6px;box-shadow:0 18px 40px -14px rgba(23,42,58,.3);animation:lmIn .18s ease}
+@keyframes lmIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.lang-menu button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;border:0;background:none;border-radius:11px;padding:10px 12px;cursor:pointer;color:var(--ink);font:inherit;text-align:start}
+.lang-menu button:hover,.lang-menu button:focus-visible{background:#F3F4F1;outline:none}
+.lang-menu button span{display:flex;flex-direction:column}
+.lang-menu b{font-size:15px;font-weight:600}
+.lang-menu small{font-size:12px;color:#6E787F}
+.lang-menu [lang=ar] b{font-family:"IBM Plex Sans Arabic",sans-serif}
+.lang-menu .lm-ck{width:18px;height:18px;color:#4F9566;visibility:hidden}
+.lang-menu [aria-checked="true"]{background:#EEF6F0}
+.lang-menu [aria-checked="true"] .lm-ck{visibility:visible}
 .login{position:relative}
-[dir=rtl] .lang-tg{right:auto;left:16px;font-family:var(--font-body)}
+[dir=rtl] .lang-wrap{right:auto;left:16px}
+[dir=rtl] .lang-menu{right:auto;left:0}
+[dir=rtl] .lang-tg{padding:7px 12px 7px 10px}
 html[lang=ar] body,html[lang=ar] button,html[lang=ar] input,html[lang=ar] select,html[lang=ar] textarea{font-family:"IBM Plex Sans Arabic","Outfit",system-ui,sans-serif}
 html[lang=ar] .sec-label,html[lang=ar] .label{letter-spacing:0}
 [dir=rtl] .back-btn svg,[dir=rtl] .sc-link svg{transform:scaleX(-1)}
@@ -1336,7 +1355,17 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
   </section>
 
   <section class="login fade" id="loginView" aria-labelledby="loginTitle">
-    <button type="button" class="lang-tg" id="langLogin" lang="ar">العربية</button>
+    <div class="lang-wrap">
+      <button type="button" class="lang-tg" id="langLogin" aria-haspopup="menu" aria-expanded="false" aria-controls="langMenu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 3 2.6 15 0 18M12 3c-2.6 3-2.6 15 0 18"/></svg>
+        <span id="langLoginTxt">Language</span>
+        <svg class="lang-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="lang-menu" id="langMenu" role="menu" hidden>
+        <button type="button" role="menuitemradio" data-lang="en" lang="en" dir="ltr" aria-checked="true"><span><b>English</b><small lang="ar">الإنجليزية</small></span><svg class="lm-ck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg></button>
+        <button type="button" role="menuitemradio" data-lang="ar" lang="ar" dir="rtl" aria-checked="false"><span><b>العربية</b><small>Arabic</small></span><svg class="lm-ck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg></button>
+      </div>
+    </div>
     <div class="brand">
       <svg viewBox="0 0 64 64" aria-hidden="true">
         <rect x="0.5" y="0.5" width="63" height="63" rx="16" fill="#FFFFFF" stroke="#E4E4E0"/>
@@ -4895,7 +4924,8 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
     try { localStorage.setItem("wellnest.lang", l); } catch(e){}
     document.documentElement.lang = l; document.documentElement.dir = l === "ar" ? "rtl" : "ltr";
     applyStatic(); try { $("howBtn").textContent = $("howBox").hidden ? t("howEarn") : t("hide"); } catch(e){}
-    $("langLogin").textContent = l === "ar" ? "English" : "العربية";
+    $("langLoginTxt").textContent = l === "ar" ? "اللغة" : "Language";
+    document.querySelectorAll("#langMenu [data-lang]").forEach(b => b.setAttribute("aria-checked", String(b.dataset.lang === l)));
     if (!$("appView").hidden) { renderSchool(); renderWork(); renderPulse(); renderMeSchool(); renderRewards(); renderShield(); renderMilestones(); $("howBtn").textContent = $("howBox").hidden ? t("howEarn") : t("hide"); try { renderGreeting($("greeting").querySelector(".greet-name").textContent); } catch(e){} }
     if (!$("obView").hidden) obRender();
   }
@@ -5216,7 +5246,15 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
   $("pfLang").addEventListener("change", e => setLang(e.target.value));
   $("sdEdit").addEventListener("click", () => obStart(sch().setup ? "edit" : "full"));
   $("ndPrev").addEventListener("click", () => { const kinds = ["warm","free","b2b","end"]; const k = kinds[(+($("ndPrev").dataset.i || 0)) % 4]; $("ndPrev").dataset.i = (+($("ndPrev").dataset.i || 0)) + 1; showNudge(NUDGE[k]()); });
-  $("langLogin").addEventListener("click", () => setLang(L() === "ar" ? "en" : "ar"));
+  function langMenu(open){ $("langMenu").hidden = !open; $("langLogin").setAttribute("aria-expanded", String(open)); if (open) (($("langMenu").querySelector('[aria-checked="true"]')) || $("langMenu").querySelector("button")).focus(); }
+  $("langLogin").addEventListener("click", e => { e.stopPropagation(); langMenu($("langMenu").hidden); });
+  $("langMenu").addEventListener("click", e => { const b = e.target.closest("[data-lang]"); if (!b) return; setLang(b.dataset.lang); langMenu(false); $("langLogin").focus(); });
+  document.addEventListener("click", e => { if (!$("langMenu").hidden && !e.target.closest(".lang-wrap")) langMenu(false); });
+  $("langMenu").addEventListener("keydown", e => {
+    const items = [...$("langMenu").querySelectorAll("button")], i = items.indexOf(document.activeElement);
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); items[(i + (e.key === "ArrowDown" ? 1 : items.length - 1)) % items.length].focus(); }
+    if (e.key === "Escape") { langMenu(false); $("langLogin").focus(); }
+  });
   setLang(L());
 
   window.__schoolReady = true;
