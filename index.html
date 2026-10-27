@@ -1,7 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>html,body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body><title>WellNest</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Dancing+Script:wght@700&display=swap">
 <style>
 /* Layout: single phone-width app column, login screen → tabbed app with bottom nav */
 /* Single light theme by request. Palette: Sage = actions, Black = all text, White = ground, Soft Blue = secondary, Coral = mood, Fresh Green = progress */
@@ -33,6 +33,7 @@ button,input{font:inherit;color:inherit}
 .brand{display:flex;flex-direction:column;align-items:flex-start;gap:14px}
 .brand svg{width:56px;height:56px}
 .brand h1{font-size:40px;font-weight:700;line-height:1}
+#loginTitle{font-family:"Dancing Script",cursive;font-weight:700;font-size:48px;line-height:1.05;letter-spacing:.5px;margin-top:-4px}
 .brand p{margin:0;color:var(--muted);font-size:16px;max-width:30ch}
 #loginForm,#registerForm{display:flex;flex-direction:column;gap:16px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:22px}
 .field{display:flex;flex-direction:column;gap:6px}
@@ -66,7 +67,7 @@ button,input{font:inherit;color:inherit}
 .success{background:var(--good-soft);border-left:3px solid #4F9566;border-radius:10px;padding:10px 12px;font-size:14px}
 
 /* ---------- App shell ---------- */
-.shell{flex:1;display:flex;flex-direction:column;padding-bottom:92px}
+.shell{flex:1;display:flex;flex-direction:column;padding-bottom:calc(88px + env(safe-area-inset-bottom,0px))}
 .topbar{display:flex;justify-content:flex-start;align-items:center;gap:12px;padding-block:18px 4px}
 .logo{display:flex;align-items:center;gap:8px;font-family:var(--font-display);font-weight:700;font-size:18px}
 .logo svg{width:34px;height:34px;flex:none}
@@ -250,14 +251,23 @@ button,input{font:inherit;color:inherit}
 .empty p{color:var(--muted);margin:8px 0 0}
 
 /* Bottom nav */
-nav.tabs{position:fixed;left:0;right:0;bottom:0;padding-bottom:env(safe-area-inset-bottom,0px);background:var(--surface);border-top:1px solid var(--line)}
-nav.tabs .inner{max-width:440px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
-nav.tabs button{border:0;background:none;padding:10px 0 12px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer}
-nav.tabs svg{width:22px;height:22px}
-nav.tabs button{box-shadow:inset 0 3px 0 transparent}
-nav.tabs button[aria-selected="true"]{color:var(--ink);box-shadow:inset 0 3px 0 var(--brand)}
+/* Floating glass island tab bar */
+nav.tabs{position:fixed;left:16px;right:16px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:30;max-width:380px;margin:0 auto;border-radius:22px;
+  background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(28px) saturate(1.8);backdrop-filter:blur(28px) saturate(1.8);
+  border:.5px solid rgba(255,255,255,.85);box-shadow:inset 0 .5px 0 rgba(255,255,255,.9),0 10px 30px -10px rgba(23,42,58,.25),0 1px 3px rgba(23,42,58,.06)}
+nav.tabs .inner{position:relative;display:grid;grid-template-columns:repeat(5,1fr);padding:4px;--i:0}
+nav.tabs .tab-ind{position:absolute;top:4px;bottom:4px;left:4px;width:calc((100% - 8px) / 5);border-radius:18px;
+  background:linear-gradient(135deg,#E6F1E9,#E4EEF3);box-shadow:inset 0 .5px 0 rgba(255,255,255,.95),0 4px 10px -6px rgba(52,116,76,.4);
+  transform:translateX(calc(var(--i) * 100%));transition:transform .36s cubic-bezier(.3,1.2,.4,1),opacity .2s}
+nav.tabs .inner.none .tab-ind{opacity:0}
+nav.tabs button{position:relative;z-index:1;border:0;background:none;padding:5px 0 4px;display:flex;flex-direction:column;align-items:center;gap:1px;font:inherit;font-size:10.5px;line-height:1.3;font-weight:500;letter-spacing:.01em;color:#66717A;cursor:pointer;border-radius:18px;-webkit-tap-highlight-color:transparent;transition:color .2s}
+nav.tabs svg{width:19px;height:19px;stroke-width:1.9;transition:transform .25s cubic-bezier(.3,1.4,.5,1)}
+nav.tabs button[aria-selected="true"]{color:#1F5E36;font-weight:600}
+nav.tabs button:active svg{transform:scale(.9)}
+nav.tabs button:focus-visible{outline:2px solid #7BAE8A;outline-offset:-2px}
+@media (prefers-reduced-motion: reduce){ nav.tabs .tab-ind,nav.tabs svg{transition:none} }
 
-.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--brand);color:var(--ink);padding:10px 16px;border-radius:999px;font-size:14px;font-weight:600;max-width:calc(100% - 32px)}
+.toast{position:fixed;left:50%;bottom:calc(82px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--brand);color:var(--ink);padding:10px 16px;border-radius:999px;font-size:14px;font-weight:600;max-width:calc(100% - 32px)}
 
 @media (prefers-reduced-motion: no-preference){
   .fade{animation:fade .35s ease both}
@@ -940,6 +950,146 @@ body.ob-open{overflow:hidden}
 .pr-k small{display:block;font-size:11.5px;opacity:.75}
 .pr-btnrow{width:100%;border:0;border-top:1px solid var(--line);background:none;font:inherit;color:var(--ink);cursor:pointer;text-align:start}
 .pr-settings .pr-row + .pr-row{border-top:1px solid var(--line)}
+
+/* ---------- Community ---------- */
+nav.tabs button{min-width:0}
+nav.tabs button.tab-center svg{width:21px;height:21px}
+.cm-page{padding-top:0;gap:12px}
+.cm-sticky{position:sticky;top:0;z-index:6;margin:0 -16px;padding:12px 16px 10px;background:rgba(253,243,241,.82);-webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);border-bottom:1px solid transparent;transition:border-color .2s,box-shadow .2s}
+.cm-sticky.stuck{border-bottom-color:rgba(23,42,58,.06);box-shadow:0 8px 18px -14px rgba(23,42,58,.35)}
+.cm-titlebar{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cm-titlebar h2{margin:0;font-size:24px}
+.cm-live{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#4A5560}
+.cm-live::before{content:"";width:7px;height:7px;border-radius:50%;background:#7BAE8A;box-shadow:0 0 0 3px rgba(123,174,138,.2)}
+.cm-live.local::before{background:#C9C9C2;box-shadow:none}
+.cm-seg{position:relative;display:grid;grid-template-columns:1fr 1fr;margin-top:10px;padding:4px;border-radius:14px;background:rgba(23,42,58,.06)}
+.cm-seg button{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:6px;border:0;background:none;padding:8px 6px;border-radius:11px;font:inherit;font-size:14px;font-weight:500;color:#4A5560;cursor:pointer}
+.cm-seg button svg{width:17px;height:17px}
+.cm-seg button[aria-selected="true"]{color:var(--ink);font-weight:600}
+.cm-seg-ind{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:11px;background:#fff;box-shadow:0 1px 2px rgba(23,42,58,.08),0 4px 12px -6px rgba(23,42,58,.25);transition:transform .32s cubic-bezier(.3,1.2,.4,1)}
+.cm-seg[data-v="ch"] .cm-seg-ind{transform:translateX(100%)}
+.seg-dot{width:7px;height:7px;border-radius:50%;background:#C9604F}
+.cm-filter{display:flex;gap:6px;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none;margin:10px -16px 0;padding:0 16px}
+.cm-filter::-webkit-scrollbar{display:none}
+.cm-filter[hidden]{display:none}
+.cm-chip{flex:none;border:1px solid rgba(23,42,58,.1);background:rgba(255,255,255,.9);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .2s,border-color .2s}
+.cm-chip i{width:7px;height:7px;border-radius:50%;display:inline-block}
+.cm-chip b{font-weight:500;font-size:11.5px;opacity:.6;font-variant-numeric:tabular-nums}
+.cm-chip[aria-pressed="true"]{background:#1F2A30;border-color:#1F2A30;color:#fff}
+.cm-chip[aria-pressed="true"] b{opacity:.75}
+.cm-view{display:flex;flex-direction:column;gap:12px}
+.cm-view[hidden]{display:none}
+.cm-start{display:flex;align-items:center;gap:10px;width:100%;border:1px solid var(--line);background:#fff;border-radius:18px;padding:10px 10px 10px 12px;cursor:pointer;font:inherit;color:#6E787F;text-align:start;box-shadow:0 6px 16px -14px rgba(23,42,58,.4)}
+.cm-start-txt{flex:1;min-width:0;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cm-start-ic{flex:none;width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,#62A678,#3F8358);color:#fff;display:grid;place-items:center}
+.cm-start-ic svg{width:17px;height:17px}
+.cm-av{flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:13.5px;font-weight:600;color:#fff;background:linear-gradient(140deg,#E8A59A,#C9604F)}
+.cm-av.anon{background:linear-gradient(140deg,#C3AEE0,#8E72BC)}
+.cm-list{display:flex;flex-direction:column;gap:10px}
+.cm-post-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 14px 8px}
+.cm-pin{display:flex;gap:10px;align-items:flex-start;background:linear-gradient(140deg,#FFF8EC,#FFFFFF 70%);border:1px solid #F3DC9A;border-radius:16px;padding:10px 12px;font-size:13px;line-height:1.4}
+.cm-pin svg{width:18px;height:18px;flex:none;margin-top:1px;color:#B7832F}
+.cm-pin p{margin:0;flex:1}
+.cm-pin button{flex:none;border:0;background:none;cursor:pointer;padding:2px;color:#6E787F}
+.cm-pin button svg{color:inherit;width:16px;height:16px}
+.cm-h{display:flex;align-items:center;gap:10px}
+.cm-h .cm-av{width:36px;height:36px}
+.cm-who{flex:1;min-width:0}
+.cm-who b{display:block;font-size:14px;font-weight:600}
+.cm-who small{font-size:12px;color:#6E787F}
+.cm-tag{font-size:11px;font-weight:500;border-radius:99px;padding:3px 9px;white-space:nowrap}
+.cm-body{margin:10px 0 0;font-size:15px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.cm-acts{display:flex;gap:2px;margin-top:8px}
+.cm-act{display:inline-flex;align-items:center;gap:5px;border:0;background:none;border-radius:10px;padding:7px 10px;font:inherit;font-size:13px;color:#4A5560;cursor:pointer}
+.cm-act:hover{background:#F5F6F3}
+.cm-act svg{width:18px;height:18px}
+.cm-act.on{color:#C9604F}
+.cm-act.on svg{fill:#E8A59A;stroke:#C9604F}
+.cm-act.on.pop svg{animation:pop .4s ease}
+.cm-act.del{margin-left:auto}
+.cm-replies{margin:6px 0 8px;padding:10px 0 0;border-top:1px solid #F0F1ED;display:flex;flex-direction:column;gap:10px}
+.cm-more{align-self:flex-start;border:0;background:none;padding:0;font:inherit;font-size:13px;font-weight:500;color:#3F8358;cursor:pointer}
+.cm-more:hover{text-decoration:underline;text-underline-offset:3px}
+.cm-reply{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;line-height:1.4;border-radius:12px;transition:background .6s}
+.cm-av.sm{width:26px;height:26px;font-size:10.5px}
+.cm-rb{flex:1;min-width:0;background:#F5F6F3;border-radius:4px 14px 14px 14px;padding:7px 10px}
+.cm-rh{display:flex;align-items:baseline;gap:6px}
+.cm-rh b{font-weight:600;font-size:13px}
+.cm-rh small{color:#6E787F;font-size:11.5px}
+.cm-reply.fresh .cm-rb{animation:freshIn .9s ease}
+@keyframes freshIn{0%{background:#DDEFE3;transform:translateY(6px);opacity:0}30%{opacity:1;transform:none}100%{background:#F5F6F3}}
+.cm-rform{display:flex;gap:6px}
+.cm-rform input{flex:1;min-width:0;border:1px solid #ECEDE8;background:#F5F6F3;border-radius:12px;padding:8px 10px;font:inherit;font-size:16px}
+.cm-rform input:focus{outline:none;background:#fff;border-color:#7BAE8A}
+.cm-rform button{border:0;border-radius:12px;background:#3F8358;color:#fff;padding:0 14px;font:inherit;font-size:13.5px;cursor:pointer}
+.cm-empty{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:28px 16px;color:#4A5560;font-size:14px}
+.cm-empty svg{width:40px;height:40px;color:#B9C4CC}
+.cm-empty .btn{margin-top:6px}
+.cm-fab{position:fixed;right:max(18px,calc(50vw - 220px + 18px));bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:25;display:inline-flex;align-items:center;gap:6px;border:0;border-radius:18px;padding:12px 16px;background:linear-gradient(135deg,#62A678,#3F8358);color:#fff;font:inherit;font-size:14.5px;font-weight:600;cursor:pointer;box-shadow:0 12px 26px -10px rgba(52,116,76,.7);transition:transform .25s cubic-bezier(.3,1.3,.5,1),opacity .2s}
+.cm-fab svg{width:18px;height:18px}
+.cm-fab.off{transform:translateY(16px) scale(.9);opacity:0;pointer-events:none}
+/* challenges */
+.ch-card{position:relative;overflow:hidden;background:linear-gradient(150deg,#F4EFFA 0%,#FFFFFF 55%,#EEF6F0 100%);padding:16px}
+.ch-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ch-top .label{font-size:11px;letter-spacing:.07em;text-transform:uppercase;font-weight:600;color:#6B4FA0}
+.ch-ends{font-size:12px;background:#fff;border:1px solid var(--line);border-radius:99px;padding:3px 10px;white-space:nowrap}
+.ch-main{display:flex;gap:16px;align-items:center;margin-top:12px}
+.ch-ring{flex:none;width:96px;height:96px;position:relative}
+.ch-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ch-ring b{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:22px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.1}
+.ch-ring b small{font-size:11px;font-weight:400;color:#4A5560}
+.ch-txt h3{margin:0;font-size:20px}
+.ch-txt p{margin:4px 0 0;font-size:13.5px;line-height:1.45;color:#2E3A44}
+.ch-days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:14px}
+.ch-day{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;color:#6E787F}
+.ch-day i{width:100%;max-width:34px;aspect-ratio:1;border-radius:10px;background:#fff;border:1px solid #ECEDE8;display:grid;place-items:center}
+.ch-day i svg{width:15px;height:15px;color:#fff}
+.ch-day.hit i{background:linear-gradient(135deg,#62A678,#3F8358);border-color:transparent}
+.ch-day.today i{border-color:#8E72BC;box-shadow:0 0 0 2px rgba(142,114,188,.2)}
+.ch-day.future i{background:transparent;border-style:dashed}
+.ch-acts{display:flex;gap:8px;margin-top:14px}
+.ch-acts .btn{flex:1}
+.ch-joined{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:12px;background:#EEF6F0;color:#2F6B45;font-size:14px;font-weight:500}
+.ch-joined svg{width:16px;height:16px}
+.ch-done{display:flex;align-items:center;gap:8px;font-size:14px;margin-top:14px;background:#E1EFE5;border-radius:12px;padding:10px 12px}
+.ch-done svg{width:18px;height:18px;flex:none}
+.ch-how{font-size:12.5px;color:#4A5560;margin:12px 0 0}
+.ch-next{display:flex;gap:12px;align-items:center}
+.ch-next .ic{flex:none;width:42px;height:42px;border-radius:13px;background:#F4EFFA;color:#8E72BC;display:grid;place-items:center}
+.ch-next .ic svg{width:21px;height:21px}
+.ch-next div{flex:1;min-width:0}
+.ch-next small{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:#6E787F}
+.ch-next b{display:block;font-size:15px;font-weight:600}
+.ch-next span{font-size:13px;color:#4A5560}
+.ch-past h3{margin:0 0 4px;font-size:16px}
+.ch-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:14px}
+.ch-row:first-of-type{border-top:0}
+.ch-row .st{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center}
+.ch-row .st svg{width:14px;height:14px}
+.ch-row .st.ok{background:#E1EFE5;color:#3F8358}.ch-row .st.miss{background:#F3F4F1;color:#9AA3A9}
+.ch-row span{flex:1}
+.ch-row small{color:#6E787F;font-size:12px}
+/* composer sheet */
+.cmp-sheet{position:fixed;inset:0;z-index:90;display:flex;align-items:flex-end;justify-content:center}
+.cmp-sheet[hidden]{display:none}
+.cmp-panel{position:relative;width:100%;max-width:480px;background:#fff;border-radius:26px 26px 0 0;padding:10px 16px calc(16px + env(safe-area-inset-bottom));box-shadow:0 -18px 50px -20px rgba(18,24,30,.35);transform:translateY(100%);transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+.cmp-sheet.open .cmp-panel{transform:none}
+.cmp-sheet .ls-backdrop{opacity:0}
+.cmp-sheet.open .ls-backdrop{opacity:1}
+.cmp-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cmp-head h3{margin:0;font-size:17px}
+.cmp-panel textarea{width:100%;border:1px solid #ECEDE8;background:#F5F6F3;border-radius:16px;padding:12px 14px;font:inherit;font-size:16px;line-height:1.45;resize:none;min-height:110px;color:var(--ink)}
+.cmp-panel textarea:focus{outline:none;background:#fff;border-color:#7BAE8A;box-shadow:0 0 0 4px rgba(123,174,138,.16)}
+.cmp-topics{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}
+.cmp-topics .cm-chip[aria-pressed="true"]{background:#EEF6F0;border-color:#7BAE8A;color:var(--ink)}
+.cmp-foot{display:flex;align-items:center;gap:10px;margin-top:10px}
+.cmp-foot .cm-anon{display:flex;align-items:center;gap:6px;font-size:13px;flex:1;cursor:pointer}
+.cmp-foot .cm-anon input{width:17px;height:17px;accent-color:#8E72BC}
+.cm-count{font-size:11.5px;font-variant-numeric:tabular-nums;color:#6E787F}
+.cmp-foot .btn-auth{height:44px;padding:0 20px}
+.cmp-foot .btn-auth:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.cm-note{font-size:11.5px;margin:10px 0 0;color:#6E787F}
+@media (min-width:600px){ .cmp-sheet{align-items:center} .cmp-panel{border-radius:24px} }
 .scr-end{text-align:center}
 .scr-end p{font-size:16px}
 #scrStart{width:100%;margin-top:8px}
@@ -1661,6 +1811,32 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
       <div class="wk-cats" id="wkCats" role="group" aria-label="Workout categories"></div>
       <div class="stack" id="wkList"></div>
     </div>
+    <div class="stack cm-page" id="tab-community" role="tabpanel" hidden>
+      <div class="cm-sticky" id="cmSticky">
+        <div class="cm-titlebar"><h2>Community</h2><span class="cm-live" id="cmLive"></span></div>
+        <div class="cm-seg" role="tablist" aria-label="Community sections">
+          <span class="cm-seg-ind" aria-hidden="true"></span>
+          <button type="button" role="tab" id="segWall" data-v="wall" aria-selected="true" aria-controls="cmWallView">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg>Staffroom</button>
+          <button type="button" role="tab" id="segCh" data-v="ch" aria-selected="false" aria-controls="cmChView">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg>Challenges<span class="seg-dot" id="segDot" hidden></span></button>
+        </div>
+        <div class="cm-filter" id="cmFilter" role="group" aria-label="Filter posts"></div>
+      </div>
+
+      <section class="cm-view" id="cmWallView" role="tabpanel" aria-labelledby="segWall">
+        <button type="button" class="cm-start" id="cmStart"><span class="cm-av" id="cmAv" aria-hidden="true"></span><span class="cm-start-txt">Share a win, a tip or some encouragement…</span><span class="cm-start-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1-5L16 4l4 4L9 19z"/></svg></span></button>
+        <div class="cm-list" id="cmList"></div>
+      </section>
+
+      <section class="cm-view" id="cmChView" role="tabpanel" aria-labelledby="segCh" hidden>
+        <section class="card ch-card" id="chCard" aria-label="This week's challenge"></section>
+        <section class="card ch-next" id="chNext"></section>
+        <section class="card" id="chPast"></section>
+      </section>
+
+      <button type="button" class="cm-fab" id="cmFab" aria-label="Write a post" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Post</button>
+    </div>
     <div class="stack" id="tab-brain" role="tabpanel" hidden>
       <div class="plan-top" style="padding-top:14px"><h2>Brain games</h2></div>
       <p class="games-sub">Six quick games to keep your mind sharp, four of them made for teachers in the UAE. Each earns up to 15 Nest points a day and has badges to win.</p>
@@ -2049,14 +2225,17 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
 
     <nav class="tabs" aria-label="Main">
       <div class="inner" role="tablist">
+        <span class="tab-ind" aria-hidden="true"></span>
         <button role="tab" id="nav-home" data-tab="home" aria-selected="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
         <button role="tab" data-tab="workouts" aria-selected="false">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor"/></svg>Workouts</button>
+        <button role="tab" data-tab="community" aria-selected="false" class="tab-center">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8.5" r="3.2"/><path d="M3 19.5c.7-3.3 3.1-5 6-5s5.3 1.7 6 5"/><circle cx="17" cy="9.5" r="2.5"/><path d="M15.8 14.6c2.4-.3 4.6 1 5.2 4.4"/></svg>Community</button>
         <button role="tab" data-tab="brain" aria-selected="false">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 6 0V4.5A2.5 2.5 0 0 0 9 4z"/><path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-6 0"/></svg>Brain</button>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 6 0V4.5A2.5 2.5 0 0 0 9 4z"/><path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-6 0"/></svg>Brain games</button>
         <button role="tab" data-tab="me" aria-selected="false">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Me</button>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Profile</button>
       </div>
     </nav>
   </section>
@@ -2489,10 +2668,13 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
 
   function selectTab(name){
     document.querySelectorAll("nav.tabs [role=tab]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.tab === name)));
-    ["home","workouts","brain","me","plan","notif","grat","work"].forEach(t => $("tab-"+t).hidden = t !== name);
+    { const idx = ["home","workouts","community","brain","me"].indexOf(name), inner = document.querySelector("nav.tabs .inner"); inner.classList.toggle("none", idx < 0); if (idx >= 0) inner.style.setProperty("--i", idx); }
+    ["home","workouts","community","brain","me","plan","notif","grat","work"].forEach(t => $("tab-"+t).hidden = t !== name);
     document.querySelector(".hello").hidden = name !== "home";
     if (name === "home" && typeof refreshHome === "function") refreshHome();
-    if (name === "me") renderProfile();   // greeting card + calendar belong to Home only
+    if (name === "me") renderProfile();
+    if (name === "community" && typeof renderCommunity === "function") renderCommunity();
+    try { updateFab(); } catch(e){}   // greeting card + calendar belong to Home only
     window.scrollTo(0,0);
   }
   document.querySelectorAll("nav.tabs [role=tab]").forEach(b => b.addEventListener("click", () => selectTab(b.dataset.tab)));
@@ -5259,6 +5441,194 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
   setLang(L());
 
   window.__schoolReady = true;
+
+
+  /* ================= Community: weekly challenge + staffroom wall ================= */
+  const TOPICS = { win:["Win","#F6C36B","#FFF4D9"], tip:["Tip","#8FB3CA","#E6F0F6"], cheer:["Encouragement","#E8A59A","#FBE9E5"], ask:["Question","#A98BD0","#F1EBF8"] };
+  const CHALLENGES = [
+    { k:"hydrate", t:"Hydration week", d:"Drink all 8 glasses of water on 4 days this week.", goal:4, unit:"days" },
+    { k:"show",    t:"Show-up week",   d:"Do your daily streak activity on 5 days this week.", goal:5, unit:"days" },
+    { k:"grat",    t:"Gratitude week", d:"Add 5 good moments to your gratitude jar.", goal:5, unit:"moments" },
+    { k:"brain",   t:"Sharp minds week", d:"Play a brain game on 4 days this week.", goal:4, unit:"days" },
+    { k:"focus",   t:"Calm marking week", d:"Finish 3 marking sprints in free periods.", goal:3, unit:"sprints" }
+  ];
+  function weekStart(d = new Date()){ const x = new Date(d); x.setHours(12,0,0,0); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x; }
+  function thisChallenge(){ const ws = weekStart(), base = new Date("2026-01-05T12:00:00"); const wn = Math.round((ws - base) / 6048e5); return { c: CHALLENGES[((wn % 5) + 5) % 5], wk: rwDk(ws), ws }; }
+  function weekDates(ws){ return [...Array(7)].map((_, i) => { const d = new Date(ws); d.setDate(ws.getDate() + i); return d; }).filter(d => d <= new Date()); }
+  function challengeProgress(c, ws){
+    const days = weekDates(ws), r = rwGet();
+    if (c.k === "hydrate") return days.filter(d => (getDay(d).water || 0) >= 8).length;
+    if (c.k === "show") { const a = rwActDays(); return days.filter(d => a.has(rwDk(d))).length; }
+    if (c.k === "grat") return ((kvGet(weekKey(ws)) || {}).notes || []).length;
+    if (c.k === "brain") return days.filter(d => Object.keys((r.days[rwDk(d)] || {}).o || {}).some(k => k.startsWith("game:"))).length;
+    if (c.k === "focus") return days.reduce((n, d) => n + ((wlDay(rwDk(d)).focusMark || 0) >= 20 ? 1 : 0), 0);
+    return 0;
+  }
+  const CM_KEY = () => "community-" + uslug();
+  function cmState(){ const s0 = kvGet(CM_KEY()) || {}; s0.joined = s0.joined || {}; s0.done = s0.done || {}; return s0; }
+  const TICK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
+  const DASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M7 12h10"/></svg>';
+  function dayHits(c, ws){
+    const r = rwGet(), a = rwActDays();
+    return [...Array(7)].map((_, i) => { const d = new Date(ws); d.setDate(ws.getDate() + i); const dk = rwDk(d);
+      if (d > new Date()) return null;
+      if (c.k === "hydrate") return (getDay(d).water || 0) >= 8;
+      if (c.k === "show") return a.has(dk);
+      if (c.k === "brain") return Object.keys((r.days[dk] || {}).o || {}).some(k => k.startsWith("game:"));
+      if (c.k === "focus") return (wlDay(dk).focusMark || 0) >= 20;
+      if (c.k === "grat") { const notes = (kvGet(weekKey(ws)) || {}).notes || []; return notes.some(n => rwDk(new Date(n.at)) === dk); }
+      return false; });
+  }
+  const CH_HOW = { hydrate:"Counts a day when you tap all 8 water glasses on Home.", show:"Counts a day when you finish your daily streak activity.", grat:"Counts each good moment you add to your gratitude jar or garden.", brain:"Counts a day when you finish any brain game.", focus:"Counts each marking sprint of 20 minutes or more." };
+  function renderChallenge(){
+    const { c, wk, ws } = thisChallenge(), st = cmState(), joined = !!st.joined[wk], n = Math.min(c.goal, challengeProgress(c, ws)), done = n >= c.goal;
+    const end = new Date(ws); end.setDate(ws.getDate() + 6); const left = Math.max(0, Math.round((end - new Date()) / 864e5));
+    const C = 2 * Math.PI * 40, pct = n / c.goal, hits = dayHits(c, ws), todayI = (new Date().getDay() + 6) % 7, dn = ["M","T","W","T","F","S","S"];
+    if (joined && done && !st.done[wk]) { st.done[wk] = rwDk(new Date()); kvSet(CM_KEY(), st); setTimeout(() => { toast("Challenge complete! Lovely work this week."); confetti(); award("challenge-" + wk, 25, "Weekly challenge"); }, 300); }
+    $("segDot").hidden = joined;
+    $("chCard").innerHTML = `<div class="ch-top"><span class="label">This week's challenge</span><span class="ch-ends">${left === 0 ? "Ends today" : left === 1 ? "1 day left" : left + " days left"}</span></div>
+      <div class="ch-main">
+        <div class="ch-ring" role="img" aria-label="${n} of ${c.goal} ${c.unit}"><svg viewBox="0 0 96 96" aria-hidden="true"><circle cx="48" cy="48" r="40" fill="none" stroke="#ECE6F4" stroke-width="9"/><circle cx="48" cy="48" r="40" fill="none" stroke="${done ? "#4F9566" : "#8E72BC"}" stroke-width="9" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - pct)}" style="transition:stroke-dashoffset .6s ease"/></svg><b>${n}/${c.goal}<small>${c.unit}</small></b></div>
+        <div class="ch-txt"><h3>${c.t}</h3><p>${c.d}</p></div>
+      </div>
+      ${c.k === "grat" ? "" : `<div class="ch-days" aria-label="This week">${hits.map((h, i) => `<span class="ch-day${h ? " hit" : ""}${i === todayI ? " today" : ""}${h === null ? " future" : ""}"><i>${h ? TICK : ""}</i>${dn[i]}</span>`).join("")}</div>`}
+      <p class="ch-how">${CH_HOW[c.k]}</p>
+      ${done && joined ? `<div class="ch-done"><svg viewBox="0 0 24 24" fill="none" stroke="#3F8358" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Completed. +25 Nest points earned</div>` :
+        `<div class="ch-acts">${joined ? `<span class="ch-joined">${TICK}Joined</span>` : `<button type="button" class="btn btn-auth" data-ch="join" style="height:46px">Join the challenge</button>`}<button type="button" class="ci-navbtn" data-ch="invite">Invite a colleague</button></div>`}`;
+    const wn = CHALLENGES.indexOf(c), nx = CHALLENGES[(wn + 1) % CHALLENGES.length];
+    $("chNext").innerHTML = `<span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg></span><div><small>Coming next week</small><b>${nx.t}</b><span>${nx.d}</span></div>`;
+    const past = Object.keys(st.joined).filter(k => k !== wk).sort().reverse().slice(0, 6);
+    const doneCount = Object.keys(st.done).length;
+    $("chPast").innerHTML = `<div class="ch-past"><h3>Your challenges</h3>${doneCount || past.length || joined ? "" : `<p class="ch-how" style="margin:0">Join this week's challenge to start your record. Each one you finish earns 25 Nest points.</p>`}
+      ${joined ? `<div class="ch-row"><span class="st ${done ? "ok" : "miss"}">${done ? TICK : DASH}</span><span>${c.t}</span><small>${done ? "Completed" : "In progress"}</small></div>` : ""}
+      ${past.map(k => { const ws2 = new Date(k + "T12:00"), base = new Date("2026-01-05T12:00:00"), wn2 = Math.round((ws2 - base) / 6048e5), c2 = CHALLENGES[((wn2 % 5) + 5) % 5], ok = !!st.done[k];
+        return `<div class="ch-row"><span class="st ${ok ? "ok" : "miss"}">${ok ? TICK : DASH}</span><span>${c2.t}</span><small>${ws2.toLocaleDateString("en-GB", { day:"numeric", month:"short" })} · ${ok ? "Completed" : "Missed"}</small></div>`; }).join("")}</div>`;
+  }
+  $("tab-community").addEventListener("click", async e => {
+    const b = e.target.closest("[data-ch]"); if (!b) return;
+    if (b.dataset.ch === "join") { const st = cmState(), { wk } = thisChallenge(); st.joined[wk] = true; kvSet(CM_KEY(), st); toast("You've joined this week's challenge"); plip(6); renderChallenge(); }
+    if (b.dataset.ch === "invite") {
+      const { c } = thisChallenge(), text = `Join me in WellNest's ${c.t}: ${c.d}`;
+      try { if (navigator.share) { await navigator.share({ title: "WellNest", text, url: location.href }); return; } } catch(err){ return; }
+      try { await navigator.clipboard.writeText(text + " " + location.href); toast("Invite copied. Paste it to a colleague."); } catch(err){ toast("Share this: " + c.t); }
+    }
+  });
+
+  // Staffroom wall: shared through the artifact's database when available, otherwise saved on this device
+  let cmCol = null, cmPosts = [], cmMe = null, cmTopic = "win", cmFilt = "all", cmOpen = {}, cmAll = {}, cmFresh = null, cmUnsub = null;
+  function cmId(){ if (cmMe) return cmMe; try { let v = localStorage.getItem("wellnest.cid"); if (!v) { v = "l" + Math.random().toString(36).slice(2, 10); localStorage.setItem("wellnest.cid", v); } return v; } catch(e){ return "local"; } }
+  function cmLocal(){ try { return JSON.parse(localStorage.getItem("wellnest.wall") || "[]"); } catch(e){ return []; } }
+  function cmLocalSave(a){ try { localStorage.setItem("wellnest.wall", JSON.stringify(a.slice(0, 200))); } catch(e){} }
+  cloudInit.then(async () => {
+    try {
+      const db = await window.claude?.use?.("db"), u = await window.claude?.use?.("user");
+      cmMe = u ? await u.id() : null;
+      if (db) { cmCol = db.collection("community/wall/posts");
+        cmUnsub = cmCol.orderBy("at", "desc").limit(100).onSnapshot(snap => { cmPosts = snap.docs.filter(d => d.exists).map(d => Object.assign({ id: d.id }, d.data())); if (!$("tab-community").hidden) renderWall(); }, () => { cmCol = null; cmPosts = cmLocal(); }); }
+    } catch(e){ cmCol = null; }
+    if (!cmCol) cmPosts = cmLocal();
+    if (!$("tab-community").hidden) renderCommunity();
+  });
+  const esc2 = t => String(t).replace(/[&<>"]/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[ch]));
+  function ago(ms){ const m = Math.round((Date.now() - ms) / 60000); if (m < 1) return "just now"; if (m < 60) return m + " min ago"; const h = Math.round(m / 60); if (h < 24) return h + " h ago"; const d = Math.round(h / 24); return d === 1 ? "yesterday" : d + " days ago"; }
+  const avCol = n => { const cols = [["#E8A59A","#C9604F"],["#8FB3CA","#4A7FA3"],["#9BC9A9","#4F9566"],["#E6C27A","#B7832F"],["#C3AEE0","#8E72BC"]]; let h = 0; for (const ch of String(n)) h = (h * 31 + ch.charCodeAt(0)) >>> 0; const c = cols[h % cols.length]; return `background:linear-gradient(140deg,${c[0]},${c[1]})`; };
+  const HEART = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7a4.3 4.3 0 0 1 7.5 2.8C19.5 15.4 12 20 12 20z"/></svg>';
+  const REPLY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg>';
+  const BIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14M10 7V4.5h4V7M7 7l1 13h8l1-13"/></svg>';
+  let cmView = "wall", cmPinOff = (() => { try { return localStorage.getItem("wellnest.pinOff") === "1"; } catch(e){ return false; } })();
+  function setCmView(v){
+    cmView = v; const wall = v === "wall";
+    $("segWall").setAttribute("aria-selected", String(wall)); $("segCh").setAttribute("aria-selected", String(!wall));
+    document.querySelector(".cm-seg").dataset.v = v;
+    $("cmWallView").hidden = !wall; $("cmChView").hidden = wall; $("cmFilter").hidden = !wall;
+    updateFab(); renderCommunity();
+  }
+  document.querySelector(".cm-seg").addEventListener("click", e => { const b = e.target.closest("[data-v]"); if (b && b.dataset.v !== cmView) { setCmView(b.dataset.v); window.scrollTo({ top: 0, behavior: "smooth" }); } });
+  document.querySelector(".cm-seg").addEventListener("keydown", e => { if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); const v = cmView === "wall" ? "ch" : "wall"; setCmView(v); $(v === "wall" ? "segWall" : "segCh").focus(); } });
+  function renderCommunity(){
+    const pr = profile();
+    $("cmAv").textContent = initials(pr.name); $("cmAv").setAttribute("style", avCol(pr.name));
+    $("cmLive").textContent = cmCol ? "Live" : "On this device"; $("cmLive").classList.toggle("local", !cmCol);
+    const cnt = k => cmPosts.filter(p => k === "all" || p.topic === k).length;
+    $("cmFilter").innerHTML = [["all","All posts"], ...Object.entries(TOPICS).map(([k, t]) => [k, t[0] + (k === "cheer" ? "" : "s")])].map(([k, l]) => `<button type="button" class="cm-chip" data-f="${k}" aria-pressed="${cmFilt === k}">${k === "all" ? "" : `<i style="background:${TOPICS[k][1]}"></i>`}${l}<b>${cnt(k)}</b></button>`).join("");
+    if (cmView === "ch") renderChallenge(); else renderWall();
+    $("segDot").hidden = !!cmState().joined[thisChallenge().wk];
+  }
+  const EMPTY_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg>';
+  function renderWall(){
+    const me = cmId(), list = cmPosts.filter(p => cmFilt === "all" || p.topic === cmFilt);
+    const pin = cmPinOff || cmFilt !== "all" ? "" : `<div class="cm-pin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 16.4 6.8 19.2l1-5.9-4.3-4.1 5.9-.8z"/></svg><p><b>Staffroom guidelines.</b> Be kind, share what helps, and keep student names and details private.</p><button type="button" data-pin="off" aria-label="Dismiss guidelines"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>`;
+    $("cmList").innerHTML = pin + (list.length ? list.map(p => {
+      const t = TOPICS[p.topic] || TOPICS.cheer, hearts = p.hearts || [], mine = p.author === me, liked = hearts.includes(me), reps = p.replies || [], open = cmOpen[p.id];
+      return `<article class="cm-post-card" data-id="${p.id}"><div class="cm-h"><span class="cm-av${p.anon ? " anon" : ""}" ${p.anon ? "" : `style="${avCol(p.name)}"`} aria-hidden="true">${p.anon ? "?" : esc2(initials(p.name || "T"))}</span><div class="cm-who"><b>${p.anon ? "A teacher" : esc2(p.name)}${mine ? " · you" : ""}</b><small>${ago(p.at)}</small></div><span class="cm-tag" style="background:${t[2]}">${t[0]}</span></div>
+        <p class="cm-body">${esc2(p.text)}</p>
+        <div class="cm-acts"><button type="button" class="cm-act${liked ? " on" : ""}" data-a="heart" aria-pressed="${liked}" aria-label="Send a heart">${HEART}${hearts.length || ""}</button><button type="button" class="cm-act" data-a="reply" aria-expanded="${!!open}">${REPLY}${reps.length ? reps.length + (reps.length === 1 ? " comment" : " comments") : "Comment"}</button>${mine ? `<button type="button" class="cm-act del" data-a="del" aria-label="Delete your post">${BIN}</button>` : ""}</div>
+        ${reps.length || open ? `<div class="cm-replies">${(() => {
+          const all = !!cmAll[p.id], shown = all ? reps : reps.slice(-1), hiddenN = reps.length - shown.length;
+          const link = reps.length > 1 ? `<button type="button" class="cm-more" data-a="all" aria-expanded="${all}">${all ? "Hide earlier comments" : `View all ${reps.length} comments`}</button>` : "";
+          return link + shown.map(r => `<div class="cm-reply${cmFresh && cmFresh.id === p.id && cmFresh.at === r.at ? " fresh" : ""}"><span class="cm-av sm${r.anon ? " anon" : ""}" ${r.anon ? "" : `style="${avCol(r.name)}"`} aria-hidden="true">${r.anon ? "?" : esc2(initials(r.name || "T"))}</span><div class="cm-rb"><div class="cm-rh"><b>${r.anon ? "A teacher" : esc2(r.name)}</b><small>${ago(r.at)}</small></div><div>${esc2(r.text)}</div></div></div>`).join("");
+        })()}${open ? `<form class="cm-rform" data-id="${p.id}"><input maxlength="200" placeholder="Write a kind comment…" aria-label="Your comment"><button type="submit">Send</button></form>` : ""}</div>` : ""}</article>`;
+    }).join("") : `<div class="cm-empty">${EMPTY_IC}<b>${cmFilt === "all" ? "The staffroom is quiet" : "Nothing here yet"}</b><span>${cmFilt === "all" ? "Be the first to share a small win from today." : "Be the first to post in this topic."}</span><button type="button" class="btn small" data-open="compose" style="flex:none">Write a post</button></div>`);
+  }
+  // Composer: bottom sheet
+  document.body.insertAdjacentHTML("beforeend", `<div class="cmp-sheet" id="cmpSheet" role="dialog" aria-modal="true" aria-labelledby="cmpTitle" hidden><div class="ls-backdrop" data-cmp="close"></div><div class="cmp-panel"><span class="ls-handle" aria-hidden="true"></span>
+    <div class="cmp-head"><h3 id="cmpTitle">New post</h3><button type="button" class="ls-x" data-cmp="close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="cmp-topics" id="cmTopics" role="group" aria-label="Topic"></div>
+    <textarea id="cmText" maxlength="280" placeholder="Share a win, a tip or some encouragement…" aria-label="Your post"></textarea>
+    <div class="cmp-foot"><label class="cm-anon"><input type="checkbox" id="cmAnon"> Post anonymously</label><span class="cm-count" id="cmCount">0/280</span><button type="button" class="btn btn-auth" id="cmPost" disabled>Post</button></div>
+    <p class="cm-note" id="cmNote"></p></div></div>`);
+  let cmpT = null;
+  function renderTopics(){ $("cmTopics").innerHTML = Object.entries(TOPICS).map(([k, t]) => `<button type="button" class="cm-chip" data-t="${k}" aria-pressed="${cmTopic === k}"><i style="background:${t[1]}"></i>${t[0]}</button>`).join(""); }
+  function openCompose(open){
+    const m = $("cmpSheet"); clearTimeout(cmpT);
+    if (open) { renderTopics(); $("cmNote").textContent = cmCol ? "Posts are shared with everyone who uses this WellNest." : "Posts are saved on this device until WellNest accounts go live.";
+      m.hidden = false; requestAnimationFrame(() => m.classList.add("open")); document.body.classList.add("ls-lock"); setTimeout(() => $("cmText").focus(), 250); }
+    else { m.classList.remove("open"); document.body.classList.remove("ls-lock"); cmpT = setTimeout(() => { m.hidden = true; }, 260); }
+  }
+  $("cmpSheet").addEventListener("click", e => { if (e.target.closest("[data-cmp=close]")) openCompose(false); const b = e.target.closest("[data-t]"); if (b) { cmTopic = b.dataset.t; renderTopics(); } });
+  $("cmpSheet").addEventListener("keydown", e => { if (e.key === "Escape") openCompose(false); });
+  $("cmStart").addEventListener("click", () => openCompose(true));
+  $("cmFab").addEventListener("click", () => openCompose(true));
+  $("cmList").addEventListener("click", e => { if (e.target.closest("[data-open=compose]")) openCompose(true); if (e.target.closest("[data-pin=off]")) { cmPinOff = true; try { localStorage.setItem("wellnest.pinOff", "1"); } catch(err){} renderWall(); } });
+  // FAB appears once the inline "share" row scrolls away; sticky header gets a shadow when stuck
+  let startVisible = true;
+  try { new IntersectionObserver(es => { startVisible = es[0].isIntersecting; updateFab(); }, { rootMargin: "-120px 0px 0px 0px" }).observe($("cmStart")); } catch(e){}
+  function updateFab(){ const show = !$("tab-community").hidden && cmView === "wall"; $("cmFab").hidden = !show; $("cmFab").classList.toggle("off", startVisible); }
+  window.addEventListener("scroll", () => { if (!$("tab-community").hidden) $("cmSticky").classList.toggle("stuck", window.scrollY > 8); }, { passive: true });
+  async function cmWrite(id, fn){
+    if (cmCol) { try { const ref = cmCol.doc(id), snap = await ref.get(); if (!snap.exists) return; const next = fn(JSON.parse(JSON.stringify(snap.data()))); if (next === null) await ref.delete(); else await ref.set(next); } catch(e){ toast("Couldn't update that post. Please try again."); } return; }
+    let a = cmLocal(); const i = a.findIndex(p => p.id === id); if (i < 0) return; const next = fn(a[i]); if (next === null) a.splice(i, 1); else a[i] = next; cmLocalSave(a); cmPosts = a; renderWall();
+  }
+  $("cmText").addEventListener("input", () => { const n = $("cmText").value.length; $("cmCount").textContent = n + "/280"; $("cmPost").disabled = !$("cmText").value.trim(); });
+  $("cmFilter").addEventListener("click", e => { const b = e.target.closest("[data-f]"); if (!b) return; cmFilt = b.dataset.f; renderCommunity(); });
+  $("cmPost").addEventListener("click", async () => {
+    const text = $("cmText").value.trim(); if (!text) return;
+    const pr = profile(), post = { text: text.slice(0, 280), topic: cmTopic, name: pr.name.split(/\s+/)[0], anon: $("cmAnon").checked, author: cmId(), at: Date.now(), hearts: [], replies: [] };
+    $("cmPost").disabled = true;
+    if (cmCol) { try { await cmCol.add(post); } catch(e){ toast("Couldn't post right now. Please try again."); $("cmPost").disabled = false; return; } }
+    else { const a = cmLocal(); a.unshift(Object.assign({ id: "p" + Date.now().toString(36) }, post)); cmLocalSave(a); cmPosts = a; }
+    $("cmText").value = ""; $("cmCount").textContent = "0/280"; $("cmPost").disabled = true; openCompose(false);
+    cmFilt = "all"; renderCommunity(); window.scrollTo({ top: 0, behavior: "smooth" }); toast("Posted to the staffroom"); plip(7); award("post", 5, "Community post");
+  });
+  $("cmList").addEventListener("click", e => {
+    const a = e.target.closest("[data-a]"); if (!a) return; const id = a.closest("[data-id]").dataset.id, me = cmId();
+    if (a.dataset.a === "heart") { const on = !a.classList.contains("on"); a.classList.toggle("on", on); if (on) { a.classList.add("pop"); plip(5); try { navigator.vibrate && navigator.vibrate(10); } catch(err){} }
+      cmWrite(id, p => { p.hearts = (p.hearts || []).filter(x => x !== me); if (on) p.hearts.push(me); return p; }); }
+    if (a.dataset.a === "all") { cmAll[id] = !cmAll[id]; renderWall(); return; }
+    if (a.dataset.a === "reply") { cmOpen[id] = !cmOpen[id]; renderWall(); if (cmOpen[id]) { const f = $("cmList").querySelector(`.cm-rform[data-id="${id}"] input`); f && f.focus(); } }
+    if (a.dataset.a === "del") { if (!confirmDel(a)) return; cmWrite(id, () => null); toast("Post deleted"); }
+  });
+  function confirmDel(btn){ if (btn.dataset.sure) return true; btn.dataset.sure = "1"; btn.innerHTML = BIN + "Tap again to delete"; setTimeout(() => { if (btn.isConnected) { delete btn.dataset.sure; btn.innerHTML = BIN; } }, 3000); return false; }
+  $("cmList").addEventListener("submit", e => {
+    e.preventDefault(); const f = e.target.closest(".cm-rform"); if (!f) return; const v = f.querySelector("input").value.trim(); if (!v) return;
+    const pr = profile(), r = { text: v.slice(0, 200), name: pr.name.split(/\s+/)[0], anon: false, author: cmId(), at: Date.now() }, id = f.dataset.id;
+    // close the box and show the newest comment (the one just sent), highlighted
+    cmOpen[id] = false; cmFresh = { id, at: r.at };
+    const post = cmPosts.find(x => x.id === id); if (post) post.replies = [...(post.replies || []), r].slice(-50);
+    renderWall(); cmWrite(id, p => { p.replies = [...(p.replies || []), r].slice(-50); return p; }); plip(6);
+    setTimeout(() => { const el = $("cmList").querySelector(".cm-reply.fresh"); if (el) el.scrollIntoView({ behavior: "smooth", block: "nearest" }); }, 60);
+    setTimeout(() => { cmFresh = null; }, 2500);
+  });
 
   /* Restore session on refresh */
   const existing = store.get(SESSION_KEY);
