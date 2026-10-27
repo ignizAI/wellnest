@@ -33,7 +33,7 @@ button,input{font:inherit;color:inherit}
 .brand{display:flex;flex-direction:column;align-items:flex-start;gap:14px}
 .brand svg{width:56px;height:56px}
 .brand h1{font-size:40px;font-weight:700;line-height:1}
-#loginTitle{min-height:1.05em;font-family:"Dancing Script",cursive;font-weight:700;font-size:48px;line-height:1.05;letter-spacing:.5px;margin-top:-4px}
+#loginTitle,#regTitle{min-height:1.05em;font-family:"Dancing Script",cursive;font-weight:700;font-size:48px;line-height:1.05;letter-spacing:.5px;margin-top:-4px}
 .brand p{margin:0;color:var(--muted);font-size:16px;max-width:30ch}
 #loginForm,#registerForm{display:flex;flex-direction:column;gap:16px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:22px}
 .field{display:flex;flex-direction:column;gap:6px}
@@ -712,14 +712,14 @@ body.typing nav.tabs{display:none}
 
 /* pen-written title: ink flows in left to right with a soft, hand-drawn edge */
 @property --pw{syntax:"<percentage>";inherits:false;initial-value:115%}
-#loginTitle .pw{display:inline-block;padding-right:6px}
-#loginTitle .pw-txt{display:inline-block;padding:0 4px;margin:0 -4px;--pw:115%;
+.ink-title .pw{display:inline-block;padding-right:6px}
+.ink-title .pw-txt{display:inline-block;padding:0 4px;margin:0 -4px;--pw:115%;
   -webkit-mask-image:linear-gradient(100deg,#000 calc(var(--pw) - 9%),rgba(0,0,0,.35) calc(var(--pw) - 3%),transparent var(--pw));
   mask-image:linear-gradient(100deg,#000 calc(var(--pw) - 9%),rgba(0,0,0,.35) calc(var(--pw) - 3%),transparent var(--pw))}
-#loginTitle.pw-play .pw-txt{animation:pwInk 1.5s cubic-bezier(.42,.08,.5,.98) both,pwSettle 2s ease both}
+.ink-title.pw-play .pw-txt{animation:pwInk 1.5s cubic-bezier(.42,.08,.5,.98) both,pwSettle 2s ease both}
 @keyframes pwInk{from{--pw:0%}to{--pw:115%}}
 @keyframes pwSettle{from{color:#4A4A4A}to{color:#000}}
-@media (prefers-reduced-motion: reduce){ #loginTitle.pw-play .pw-txt{animation:none} }
+@media (prefers-reduced-motion: reduce){ .ink-title.pw-play .pw-txt{animation:none} }
 /* ---------- Sleek sign-in ---------- */
 #loginForm,#registerForm{background:rgba(255,255,255,.86);-webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2);border:1px solid rgba(255,255,255,.95);border-radius:24px;padding:24px 20px;gap:18px;box-shadow:0 1px 2px rgba(23,42,58,.04),0 18px 44px -16px rgba(23,42,58,.22)}
 .field{gap:7px}
@@ -1495,7 +1495,7 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
         <path d="M32 46c-6-4-10-8-10-13a5 5 0 0 1 10-1 5 5 0 0 1 10 1c0 5-4 9-10 13z" fill="#FFFFFF"/>
         <path d="M32 22c0-5 3-9 8-10-1 5-4 8-8 10z" fill="#4F9566"/>
       </svg>
-      <h1 id="regTitle">Join WellNest</h1>
+      <h1 id="regTitle" class="ink-title" aria-label="Join WellNest">Join WellNest</h1>
       <p>Create your teacher account. It takes less than a minute.</p>
     </div>
 
@@ -1548,7 +1548,7 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
         <path d="M32 46c-6-4-10-8-10-13a5 5 0 0 1 10-1 5 5 0 0 1 10 1c0 5-4 9-10 13z" fill="#FFFFFF"/>
         <path d="M32 22c0-5 3-9 8-10-1 5-4 8-8 10z" fill="#4F9566"/>
       </svg>
-      <h1 id="loginTitle" aria-label="WellNest">WellNest</h1>
+      <h1 id="loginTitle" class="ink-title" aria-label="WellNest">WellNest</h1>
       <p>Your daily space to check in, move a little and stay sharp, built for teachers.</p>
     </div>
 
@@ -2394,14 +2394,14 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
   /* ---------- Registration ---------- */
   const regErr = $("regError");
   // "WellNest" appears as if written by hand over 1.5 seconds
-  function typeTitle(){
-    const el = $("loginTitle"); if (!el) return;
-    if (!el.querySelector(".pw")) el.innerHTML = '<span class="pw"><span class="pw-txt" aria-hidden="true">WellNest</span></span>';
+  function typeTitle(id){
+    const el = $(id || "loginTitle"); if (!el) return;
+    if (!el.querySelector(".pw")) el.innerHTML = '<span class="pw"><span class="pw-txt" aria-hidden="true">' + el.getAttribute("aria-label") + '</span></span>';
     el.classList.remove("pw-play"); void el.offsetWidth; el.classList.add("pw-play");
   }
   function showView(which){
     $("registerView").hidden = which !== "register"; $("loginView").hidden = which !== "login";
-    if (which === "login") typeTitle();
+    if (which === "login") typeTitle("loginTitle"); else typeTitle("regTitle");
     (which === "register" ? $("regName") : user).focus();
     window.scrollTo(0,0);
   }
