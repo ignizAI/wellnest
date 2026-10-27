@@ -710,19 +710,16 @@ body.typing nav.tabs{display:none}
 
 
 
-/* pen-written title */
-#loginTitle .pw{position:relative;display:inline-block;padding-right:6px}
-#loginTitle .pw-txt{display:inline-block;clip-path:inset(-25% -6% -25% 0)}
-#loginTitle .pw-pen{position:absolute;left:100%;bottom:12%;width:44px;height:44px;margin-left:-4px;pointer-events:none;opacity:0;transform-origin:4px 36px}
-#loginTitle .pw-pen svg{width:100%;height:100%;display:block;filter:drop-shadow(0 3px 3px rgba(23,42,58,.18))}
-#loginTitle.pw-play .pw-txt{animation:pwReveal 1.5s cubic-bezier(.45,.05,.55,.95) both}
-#loginTitle.pw-play .pw-pen{animation:pwMove 1.5s cubic-bezier(.45,.05,.55,.95) both,pwLift .5s ease 1.5s forwards}
-#loginTitle.pw-play .pw-pen svg{animation:pwBob .19s ease-in-out 8 alternate}
-@keyframes pwReveal{from{clip-path:inset(-25% 100% -25% 0)}to{clip-path:inset(-25% -6% -25% 0)}}
-@keyframes pwMove{0%{left:0;opacity:0}6%{opacity:1}100%{left:calc(100% - 8px);opacity:1}}
-@keyframes pwBob{from{transform:translateY(0) rotate(0)}to{transform:translateY(-7px) rotate(-6deg)}}
-@keyframes pwLift{to{opacity:0;transform:translate(10px,-16px) rotate(12deg)}}
-@media (prefers-reduced-motion: reduce){ #loginTitle .pw-pen{display:none} #loginTitle.pw-play .pw-txt{animation:none} }
+/* pen-written title: ink flows in left to right with a soft, hand-drawn edge */
+@property --pw{syntax:"<percentage>";inherits:false;initial-value:115%}
+#loginTitle .pw{display:inline-block;padding-right:6px}
+#loginTitle .pw-txt{display:inline-block;padding:0 4px;margin:0 -4px;--pw:115%;
+  -webkit-mask-image:linear-gradient(100deg,#000 calc(var(--pw) - 9%),rgba(0,0,0,.35) calc(var(--pw) - 3%),transparent var(--pw));
+  mask-image:linear-gradient(100deg,#000 calc(var(--pw) - 9%),rgba(0,0,0,.35) calc(var(--pw) - 3%),transparent var(--pw))}
+#loginTitle.pw-play .pw-txt{animation:pwInk 1.5s cubic-bezier(.42,.08,.5,.98) both,pwSettle 2s ease both}
+@keyframes pwInk{from{--pw:0%}to{--pw:115%}}
+@keyframes pwSettle{from{color:#4A4A4A}to{color:#000}}
+@media (prefers-reduced-motion: reduce){ #loginTitle.pw-play .pw-txt{animation:none} }
 /* ---------- Sleek sign-in ---------- */
 #loginForm,#registerForm{background:rgba(255,255,255,.86);-webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2);border:1px solid rgba(255,255,255,.95);border-radius:24px;padding:24px 20px;gap:18px;box-shadow:0 1px 2px rgba(23,42,58,.04),0 18px 44px -16px rgba(23,42,58,.22)}
 .field{gap:7px}
@@ -2396,11 +2393,10 @@ h1, h2, h3, .logo span, .card-title{font-weight:700 !important}
 
   /* ---------- Registration ---------- */
   const regErr = $("regError");
-  // "WellNest" is written out by a pencil over 1.5 seconds
-  const PENCIL = '<svg viewBox="0 0 40 40" aria-hidden="true"><g transform="translate(-7 -3) rotate(38 20 20)"><rect x="17" y="-2" width="7" height="30" rx="1.6" fill="#F6C36B"/><rect x="19.3" y="-2" width="2.4" height="30" fill="#EBB34F"/><rect x="17" y="-6" width="7" height="5" rx="1.5" fill="#E8A59A"/><rect x="17" y="-1.6" width="7" height="2.2" fill="#C9C9C2"/><path d="M17 28h7l-3.5 9z" fill="#F1D9B5"/><path d="M19.4 33.6h2.2l-1.1 3.4z" fill="#2E2A28"/></g></svg>';
+  // "WellNest" appears as if written by hand over 1.5 seconds
   function typeTitle(){
     const el = $("loginTitle"); if (!el) return;
-    if (!el.querySelector(".pw")) el.innerHTML = '<span class="pw"><span class="pw-txt" aria-hidden="true">WellNest</span><span class="pw-pen" aria-hidden="true">' + PENCIL + '</span></span>';
+    if (!el.querySelector(".pw")) el.innerHTML = '<span class="pw"><span class="pw-txt" aria-hidden="true">WellNest</span></span>';
     el.classList.remove("pw-play"); void el.offsetWidth; el.classList.add("pw-play");
   }
   function showView(which){
